@@ -5,6 +5,7 @@ package com.iqlearning.database.service;
 import com.iqlearning.database.entities.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUserService {
 
@@ -16,5 +17,6 @@ public interface IUserService {
     List<User> getAllUsers();
     User saveUser(User user);
     boolean deleteUser(long id);
+    User getUserBySession(String sessionId);
 
 }
