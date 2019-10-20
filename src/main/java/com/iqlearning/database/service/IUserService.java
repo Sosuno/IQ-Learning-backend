@@ -1,5 +1,7 @@
 package com.iqlearning.database.service;
-
+/*****
+ * Author: Ewa Jasinska
+ */
 import com.iqlearning.database.entities.User;
 
 import java.util.List;

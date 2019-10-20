@@ -1,23 +1,25 @@
 package com.iqlearning.database.entities;
-
+/*****
+ * Author: Ewa Jasinska
+ */
 
 import javax.persistence.*;
-import java.io.Serializable;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 
 
-/*
+/****
 Return codes:
 User id = -1 --> User doesn't exists
 User = null  --> db is fucked
 */
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name")
     private String name;
@@ -40,7 +42,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String name, String surname, String username, String password, String email, int status, Timestamp creationTime) {
+    public User(String name, String surname, String username, String password, String email, int status, Timestamp creationTime,int loginTries) {
         this.name = name;
         this.surname = surname;
         this.username = username;
@@ -48,6 +50,13 @@ public class User implements Serializable {
         this.email = email;
         this.status = status;
         this.creationTime = creationTime;
+        this.loginTries = loginTries;
+    }
+
+    public User(boolean exists){
+        if(!exists) {
+            this.id = (long) -1;
+        }
     }
 
     public Long getId() {
