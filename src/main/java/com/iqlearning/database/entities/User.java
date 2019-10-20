@@ -13,6 +13,11 @@ import java.util.Objects;
 Return codes:
 User id = -1 --> User doesn't exists
 User = null  --> db is fucked
+
+ Status legend:
+    0 - inactive
+    1 - blocked
+    2 - active
 */
 @Entity
 @Table(name = "users")

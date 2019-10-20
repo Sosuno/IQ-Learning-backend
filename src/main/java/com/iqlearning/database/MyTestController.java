@@ -1,6 +1,8 @@
 package com.iqlearning.database;
 
 
+import com.iqlearning.context.activities.AccountManagement;
+import com.iqlearning.context.activities.LoggedUser;
 import com.iqlearning.database.entities.Session;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.ISessionService;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,6 +31,44 @@ public class MyTestController {
     private User u1;
     private Session s;
 
+
+    /**************
+     * Accuont managaer
+     */
+    @RequestMapping(value = "/test/Acc/login", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public List<LoggedUser> login() {
+
+        AccountManagement acc = new AccountManagement(userService,sessionService);
+        List<LoggedUser> users = new ArrayList<>();
+        users.add(acc.login("Archangel", "calibrate"));
+        users.add(acc.login("FatherIssues","jacob"));
+        users.add(acc.login("jane","jane"));
+
+        return users;
+    }
+    @RequestMapping(value = "/test/Acc/session", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public List<LoggedUser> loginSession() {
+
+        AccountManagement acc = new AccountManagement(userService,sessionService);
+        List<LoggedUser> users = new ArrayList<>();
+        users.add(acc.loginWithSession("1234-1234-1234-1234"));
+
+
+        return users;
+    }
+    @RequestMapping(value = "/test/Acc/logout", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public Session logout() {
+
+        AccountManagement acc = new AccountManagement(userService,sessionService);
+        s = sessionService.getSession("1234-1234-1234-1234");
+        acc.logout(s.getSessionID(),userService.getUser(s.getUserID()).getUsername());
+        acc.logout("123","Archangel");
+        s = sessionService.getSession("1234-1234-1234-1234");
+        return s;
+    }
 
     /****************************************************************************************
      *  User tests~

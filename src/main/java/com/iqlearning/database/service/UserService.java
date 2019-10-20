@@ -27,14 +27,29 @@ public class UserService implements IUserService{
 
     @Override
     public User getUserByUsername(String username) {
-        List<User> results = repo.findByUsername(username);
-        return checkListResults(results);
+        Optional<User> o = repo.findByUsername(username);
+        if( o.isPresent()){
+            return o.get();
+        }
+        return new User(false);
     }
 
     @Override
     public User getUserByEmail(String email) {
-        List<User> results = repo.findByEmail(email);
-        return checkListResults(results);
+        Optional<User> o = repo.findByEmail(email);
+        if( o.isPresent()){
+            return o.get();
+        }
+        return new User(false);
+    }
+
+    @Override
+    public User getUserBySession(String sessionId) {
+        Optional<Long> o = repo.getUserBySession(sessionId);
+        if(o.isPresent()){
+            return getUser(o.get());
+        }
+        return new User(false);
     }
 
     @Override
@@ -63,14 +78,14 @@ public class UserService implements IUserService{
         return !repo.existsById(id);
     }
 
-    private User checkListResults(List<User> results) {
+    private User checkListResults(List<Optional<User>> results) {
         User user;
         switch(results.size()){
             case 0: {
                 user = new User(false);break;
             }
             case 1: {
-                user = results.get(0);break;
+                user = results.get(0).get();break;
             }
             default: {
                 user = null;
