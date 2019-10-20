@@ -69,6 +69,21 @@ public class MyTestController {
         s = sessionService.getSession("1234-1234-1234-1234");
         return s;
     }
+    @RequestMapping(value = "/test/Acc/signin", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public List<LoggedUser> signin() {
+
+        List <LoggedUser> users = new ArrayList<>();
+        AccountManagement acc = new AccountManagement(userService,sessionService);
+
+        users.add(acc.register("CerberusBitch","keepOut","Lawson@normandy.space","Miranda","Lawson"));
+        users.add(acc.register("Javik","prothean","javik@normandy.space"));
+        users.add(acc.register("Javik","",""));
+        users.add(acc.register("","","javik@normandy.space"));
+
+
+        return users;
+    }
 
     /****************************************************************************************
      *  User tests~

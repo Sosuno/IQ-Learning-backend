@@ -11,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 
-
-
+import java.sql.Timestamp;
 
 @Component
 @Configurable
@@ -82,6 +81,35 @@ public class AccountManagement {
     private void changeStatus(int i){
         user.setStatus(i);
         service.saveUser(user);
+    }
+
+    /****
+     * ID RETURN LEGEND:
+     *      -1 --> username taken
+     *      -2 --> email in use
+     *
+     */
+    public LoggedUser register(String username,String password, String email, String name,String surname) {
+        if(service.checkIfUserExists(username)) {
+            loggedUser = new LoggedUser();
+            loggedUser.setId((long) -1);
+            return loggedUser;
+        }
+        if (service.checkIfEmailInUse(email)){
+            loggedUser = new LoggedUser();
+            loggedUser.setId((long) -2);
+            return loggedUser;
+        }
+        user = new User(name,surname,username,password,email,2, new Timestamp(System.currentTimeMillis()), 0);
+        user = service.saveUser(user);
+        s = sessionService.createSession(user.getId());
+        loggedUser = new LoggedUser(user,s.getSessionID());
+
+        return loggedUser;
+    }
+
+    public LoggedUser register(String username,String password, String email) {
+        return register(username,password,email,"","");
     }
 
 
