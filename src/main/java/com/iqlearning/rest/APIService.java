@@ -16,14 +16,14 @@ import java.util.List;
 @Service
 public class APIService {
 
-    @Autowired
-    private IUserService userService;
-    @Autowired
-    private ISessionService sessionService;
+
 
     List <LoggedUser> users = new ArrayList<>();
-    AccountManagement acc = new AccountManagement(userService,sessionService);
+    AccountManagement acc;
 
+    public void setServices(IUserService userService, ISessionService sessionService) {
+        acc = new AccountManagement(userService,sessionService);
+    }
 
     public LoggedUser login(LoginForm loginForm) {
 
