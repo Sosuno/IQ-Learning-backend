@@ -1,6 +1,5 @@
 package com.iqlearning.rest;
 
-import com.iqlearning.context.activities.LoggedUser;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.ISessionService;
 import com.iqlearning.database.service.IUserService;
