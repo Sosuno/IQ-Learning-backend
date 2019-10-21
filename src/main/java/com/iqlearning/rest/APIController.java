@@ -1,10 +1,11 @@
 package com.iqlearning.rest;
 
-import com.iqlearning.database.entities.User;
+import com.iqlearning.context.activities.LoggedUser;
 import com.iqlearning.database.service.ISessionService;
 import com.iqlearning.database.service.IUserService;
 import com.iqlearning.rest.resource.LoginForm;
 import com.iqlearning.rest.resource.RegisterForm;
+import com.iqlearning.rest.resource.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,6 @@ public class APIController {
 
     @Autowired
     private APIService APIService;
-
     @Autowired
     private IUserService userService;
     @Autowired
@@ -43,11 +43,11 @@ public class APIController {
     }
 
     @PostMapping("/user/refresh")
-    public ResponseEntity<User> getUserByToken(@RequestBody String token) {
+    public ResponseEntity<LoggedUser> getUserByToken(@RequestBody Token token) {
         APIService.setServices(userService,sessionService);
-        User user = userService.getUserBySession(token);
-        if(user != null) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
+        LoggedUser loggedUser = APIService.getUserBySession(token.getToken());
+        if(loggedUser != null) {
+            return new ResponseEntity<>(loggedUser, HttpStatus.OK);
         } else return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
     }
