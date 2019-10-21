@@ -2,6 +2,7 @@ package com.iqlearning.rest;
 
 import com.iqlearning.context.activities.AccountManagement;
 import com.iqlearning.context.activities.LoggedUser;
+import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.ISessionService;
 import com.iqlearning.database.service.IUserService;
 import com.iqlearning.rest.resource.LoginForm;
@@ -22,28 +23,37 @@ public class APIService {
     private ISessionService sessionService;
 
     List <LoggedUser> users = new ArrayList<>();
-    AccountManagement acc = new AccountManagement(userService,sessionService);
+    AccountManagement acc;
 
-
-    public LoggedUser login(LoginForm loginForm) {
-
-
-        users.add(acc.login(loginForm.getUsername(), loginForm.getPassword()));
-
-        return users.get(users.size());
+    public void setServices(IUserService userService, ISessionService sessionService) {
+        acc = new AccountManagement(userService,sessionService);
     }
 
 
-    public boolean registerUser(RegisterForm registerForm) {
+    public String login(LoginForm loginForm) {
 
-        int size = users.size();
-        users.add(acc.register(registerForm.getUsername(),registerForm.getPassword(),registerForm.getEmail(),registerForm.getName(),registerForm.getSurname()));
+        LoggedUser loggedUser = acc.login(loginForm.getUsername(), loginForm.getPassword());
 
-        if(size != users.size()) {
-            return false;
-        } else {
-            return true;
-        }
+        if(loggedUser == null) {
+            return "Username not found";
+        } else if(loggedUser.getId() == -1) {
+            return "Bad password";
+        } else if(loggedUser.getId() == -2) {
+            return "Account suspended";
+        } else return "Success";
+
+    }
+
+
+    public String registerUser(RegisterForm registerForm) {
+
+        LoggedUser newUser = acc.register(registerForm.getUsername(),registerForm.getPassword(),registerForm.getEmail(),registerForm.getName(),registerForm.getSurname());
+
+        if(newUser.getId() == -1) {
+            return "Username taken";
+        } else if(newUser.getId() == -2) {
+            return "Email taken";
+        } else return "Success";
     }
 
 }
