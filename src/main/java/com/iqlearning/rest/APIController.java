@@ -9,12 +9,12 @@ import com.iqlearning.rest.resource.RegisterForm;
 import com.iqlearning.rest.resource.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.HttpRequest;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins=("http://localhost:3000"))
@@ -54,10 +54,11 @@ public class APIController {
 
     }
 
-    @PostMapping("/user/refresh")
-    public ResponseEntity<?> getUserByToken(@RequestBody Token token) {
+    @GetMapping("/user/refresh")
+    public ResponseEntity<?> getUserByToken(@RequestHeader Map<String, String> headers) {
         acc = new AccountManagement(userService,sessionService);
-        LoggedUser loggedUser = acc.loginWithSession(token.getToken());
+        String session = headers.get("authorization").split(" ")[1];
+        LoggedUser loggedUser = acc.loginWithSession(session);
         if(loggedUser.getId() != -1) {
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("Authorization",
@@ -65,7 +66,8 @@ public class APIController {
             return ResponseEntity.ok()
                     .headers(responseHeaders)
                     .body(loggedUser);
-        } else return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } else return ResponseEntity.badRequest()
+                    .body("Session expired");
     }
 
     private ResponseEntity<?> auth(String session) {
