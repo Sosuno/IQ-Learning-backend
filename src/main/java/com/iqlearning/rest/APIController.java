@@ -1,5 +1,6 @@
 package com.iqlearning.rest;
 
+import com.iqlearning.context.activities.AccountManagement;
 import com.iqlearning.context.activities.LoggedUser;
 import com.iqlearning.database.service.ISessionService;
 import com.iqlearning.database.service.IUserService;
@@ -19,38 +20,43 @@ import org.springframework.web.bind.annotation.RestController;
 public class APIController {
 
     @Autowired
-    private APIService APIService;
-    @Autowired
     private IUserService userService;
     @Autowired
     private ISessionService sessionService;
 
+    private AccountManagement acc;
+
 
     @PostMapping("/user/token")
     public ResponseEntity<String> login(@RequestBody LoginForm loginForm) {
-        APIService.setServices(userService,sessionService);
-        if(APIService.login(loginForm) != null) {
-            return new ResponseEntity<>(APIService.login(loginForm), HttpStatus.OK);
-        } else return new ResponseEntity<>(APIService.login(loginForm), HttpStatus.BAD_REQUEST);
+        acc = new AccountManagement(userService,sessionService);
+        LoggedUser user = acc.login(loginForm.getUsername(), loginForm.getPassword());
+        if(user == null) {
+            return new ResponseEntity<>("Username not found", HttpStatus.FORBIDDEN);
+        } else if(user.getId() == -1) {
+            return new ResponseEntity<>("Bad password", HttpStatus.FORBIDDEN);
+        } else if(user.getId() == -2) {
+            return new ResponseEntity<>("Account suspended", HttpStatus.FORBIDDEN);
+        } else return new ResponseEntity<>(user.getSessionID(), HttpStatus.OK);
     }
 
     @PostMapping("/user/register")
     public ResponseEntity<String> registerUser(@RequestBody RegisterForm registerForm) {
-        APIService.setServices(userService,sessionService);
-        if(APIService.registerUser(registerForm) != null) {
-            return new ResponseEntity<>(APIService.registerUser(registerForm), HttpStatus.OK);
-        } else return new ResponseEntity<>(APIService.registerUser(registerForm), HttpStatus.BAD_REQUEST);
+        acc = new AccountManagement(userService,sessionService);
+        LoggedUser user = acc.register(registerForm.getUsername(),registerForm.getPassword(),registerForm.getEmail(),registerForm.getName(),registerForm.getSurname());
+        if(user.getId() == -1) {
+            return new ResponseEntity<>( "Username taken", HttpStatus.NOT_ACCEPTABLE);
+        } else if(user.getId() == -2) {
+            return new ResponseEntity<>( "Email taken", HttpStatus.NOT_ACCEPTABLE);
+        } else return new ResponseEntity<>(user.getSessionID(), HttpStatus.OK);
     }
 
     @PostMapping("/user/refresh")
     public ResponseEntity<LoggedUser> getUserByToken(@RequestBody Token token) {
-        APIService.setServices(userService,sessionService);
-        LoggedUser loggedUser = APIService.getUserBySession(token.getToken());
-        if(loggedUser != null) {
+        acc = new AccountManagement(userService,sessionService);
+        LoggedUser loggedUser = acc.loginWithSession(token.getToken());
+        if(loggedUser.getId() != -1) {
             return new ResponseEntity<>(loggedUser, HttpStatus.OK);
         } else return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-
     }
-
-
 }
