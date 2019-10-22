@@ -25,7 +25,6 @@ public class AccountManagement {
 
     @Autowired
     public AccountManagement(IUserService service, ISessionService sessionService) {
-
         this.service = service;
         this.sessionService = sessionService;
     }
