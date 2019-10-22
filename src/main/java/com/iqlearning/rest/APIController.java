@@ -61,8 +61,10 @@ public class APIController {
         LoggedUser loggedUser = acc.loginWithSession(session);
         if(loggedUser.getId() != -1) {
             return auth(loggedUser.getSessionID(),loggedUser);
-        } else return ResponseEntity.badRequest()
-                    .body("Session expired");
+        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("Session expired");
+
+
     }
 
     private ResponseEntity<?> auth(String session, Object o) {
