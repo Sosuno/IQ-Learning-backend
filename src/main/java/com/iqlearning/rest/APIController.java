@@ -39,7 +39,7 @@ public class APIController {
             return new ResponseEntity<>("Bad password", HttpStatus.FORBIDDEN);
         } else if(user.getId() == -2) {
             return new ResponseEntity<>("Account suspended", HttpStatus.FORBIDDEN);
-        } else return auth(user.getSessionID());
+        } else return auth(user.getSessionID(), user);
     }
 
     @PostMapping("/user/register")
@@ -50,7 +50,7 @@ public class APIController {
             return new ResponseEntity<>( "Username taken", HttpStatus.NOT_ACCEPTABLE);
         } else if(user.getId() == -2) {
             return new ResponseEntity<>( "Email taken", HttpStatus.NOT_ACCEPTABLE);
-        } else return auth(user.getSessionID());
+        } else return auth(user.getSessionID(),user);
 
     }
 
@@ -60,17 +60,12 @@ public class APIController {
         String session = headers.get("authorization").split(" ")[1];
         LoggedUser loggedUser = acc.loginWithSession(session);
         if(loggedUser.getId() != -1) {
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("Authorization",
-                    loggedUser.getSessionID());
-            return ResponseEntity.ok()
-                    .headers(responseHeaders)
-                    .body(loggedUser);
+            return auth(loggedUser.getSessionID(),loggedUser);
         } else return ResponseEntity.badRequest()
                     .body("Session expired");
     }
 
-    private ResponseEntity<?> auth(String session) {
+    private ResponseEntity<?> auth(String session, Object o) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Authorization",
                 session);
@@ -78,6 +73,6 @@ public class APIController {
         token.setToken(session);
         return ResponseEntity.ok()
                 .headers(responseHeaders)
-                .body(token);
+                .body(o);
     }
 }
