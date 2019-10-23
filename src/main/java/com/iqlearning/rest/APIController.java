@@ -9,8 +9,12 @@ import com.iqlearning.rest.resource.RegisterForm;
 import com.iqlearning.rest.resource.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -51,7 +55,15 @@ public class APIController {
         } else if(user.getId() == -2) {
             return new ResponseEntity<>( "Email taken", HttpStatus.NOT_ACCEPTABLE);
         } else return auth(user.getSessionID(),user);
+    }
 
+    @PostMapping("/user/logout")
+    public ResponseEntity<?> logoutUser(@RequestBody Token token) {
+        acc = new AccountManagement(userService,sessionService);
+        acc.logout(token.getToken(), userService.getUserBySession(token.getToken()).getUsername());
+        if(sessionService.getSession(token.getToken()) != null) {
+            return new ResponseEntity<>( "Logout unsuccessful", HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>( "Logout successful", HttpStatus.OK);
     }
 
     @GetMapping("/user/refresh")
