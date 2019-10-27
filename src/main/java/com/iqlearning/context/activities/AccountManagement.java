@@ -1,6 +1,6 @@
 package com.iqlearning.context.activities;
 
-import com.iqlearning.context.Objects.LoggedUser;
+import com.iqlearning.context.objects.LoggedUser;
 import com.iqlearning.database.entities.Session;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.interfaces.ISessionService;
@@ -111,8 +111,4 @@ public class AccountManagement {
     public LoggedUser register(String username,String password, String email) {
         return register(username,password,email,"","");
     }
-
-
-
-
 }

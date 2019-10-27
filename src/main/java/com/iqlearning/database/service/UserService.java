@@ -78,21 +78,4 @@ public class UserService implements IUserService {
         repo.deleteById(id);
         return !repo.existsById(id);
     }
-
-    private User checkListResults(List<Optional<User>> results) {
-        User user;
-        switch(results.size()){
-            case 0: {
-                user = new User(false);break;
-            }
-            case 1: {
-                user = results.get(0).get();break;
-            }
-            default: {
-                user = null;
-            }
-        }
-        return user;
-    }
-
 }

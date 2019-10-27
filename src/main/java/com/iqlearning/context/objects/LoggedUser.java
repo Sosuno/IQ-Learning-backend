@@ -1,4 +1,4 @@
-package com.iqlearning.context.Objects;
+package com.iqlearning.context.objects;
 
 
 import com.iqlearning.database.entities.User;

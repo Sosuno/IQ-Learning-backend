@@ -54,4 +54,9 @@ public class AnswerService implements IAnswerService {
     public void deleteAnswer(Long id) {
         repo.deleteById(id);
     }
+
+    @Override
+    public void deleteAnswers(Long id) {
+        repo.deleteAllByQuestionId(id);
+    }
 }

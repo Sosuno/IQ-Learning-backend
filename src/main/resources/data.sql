@@ -1,4 +1,3 @@
-
 INSERT INTO users(name, surname, username, password,email,status,creation_time,login_tries) VALUES
   ('Evik','Master','SystemMaster','admin','evik@iqlearning.corp',5,now(),0),
   ('John','Smith','johnny','john123','smith@gmail.com',0,now(),0),

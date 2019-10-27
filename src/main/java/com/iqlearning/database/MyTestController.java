@@ -2,7 +2,7 @@ package com.iqlearning.database;
 
 
 import com.iqlearning.context.activities.AccountManagement;
-import com.iqlearning.context.Objects.LoggedUser;
+import com.iqlearning.context.objects.LoggedUser;
 import com.iqlearning.database.entities.*;
 import com.iqlearning.database.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;

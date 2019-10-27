@@ -1,8 +1,6 @@
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS subjects;
-
-
 DROP TABLE IF EXISTS sessions;
 DROP TABLE IF EXISTS users;
 
@@ -24,6 +22,7 @@ CREATE TABLE sessions(
                     creation_time TIMESTAMP NOT NULL,
                     FOREIGN KEY (user_id) REFERENCES users (id)
                   );
+
 CREATE TABLE subjects(
                     id SERIAL PRIMARY KEY,
                     name VARCHAR(64) NOT NULL,
@@ -52,7 +51,3 @@ CREATE TABLE answers(
                     last_edited TIMESTAMP,
                     FOREIGN KEY (question_id) REFERENCES questions(id)
                   );
-
-
-
-
