@@ -50,7 +50,15 @@ public class APIController {
         } else if(user.getId() == -2) {
             return new ResponseEntity<>( "Email taken", HttpStatus.NOT_ACCEPTABLE);
         } else return auth(user.getSessionID(),user);
+    }
 
+    @PostMapping("/user/logout")
+    public ResponseEntity<?> logoutUser(@RequestBody Token token) {
+        acc = new AccountManagement(userService,sessionService);
+        acc.logout(token.getToken(), userService.getUserBySession(token.getToken()).getUsername());
+        if(sessionService.getSession(token.getToken()) != null) {
+            return new ResponseEntity<>( "Logout unsuccessful", HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>( "Logout successful", HttpStatus.OK);
     }
 
     @GetMapping("/user/refresh")
