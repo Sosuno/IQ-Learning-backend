@@ -27,6 +27,9 @@ public class Question {
         this.choiceTest = choice_test;
         this.shareable = shareable;
     }
+    public Question() {
+
+    }
 
     public Long getId() {
         return id;

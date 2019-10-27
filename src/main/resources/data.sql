@@ -9,7 +9,7 @@ INSERT INTO users(name, surname, username, password,email,status,creation_time,l
 INSERT INTO sessions VALUES
   ('1234-1234-1234-1234',1,now());
 
-INSERT INTO subject(name,year) VALUES
+INSERT INTO subjects(name,year) VALUES
   ('Math', 1),
   ('Math',2),
   ('Math',7),

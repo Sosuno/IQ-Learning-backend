@@ -4,11 +4,13 @@ import com.iqlearning.database.entities.Subject;
 import com.iqlearning.database.repository.SubjectRepository;
 import com.iqlearning.database.service.interfaces.ISubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class SubjectService implements ISubjectService {
 
     @Autowired

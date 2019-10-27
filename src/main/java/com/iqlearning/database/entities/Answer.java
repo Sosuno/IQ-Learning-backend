@@ -22,6 +22,9 @@ public class Answer {
         this.correct = correct;
     }
 
+    public Answer() {
+    }
+
     public Long getId() {
         return id;
     }

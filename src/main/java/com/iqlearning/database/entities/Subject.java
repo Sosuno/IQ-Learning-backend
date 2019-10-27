@@ -18,6 +18,9 @@ public class Subject {
         this.name = name;
         this.year = year;
     }
+    public Subject() {
+
+    }
 
     public Long getId() {
         return id;

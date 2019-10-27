@@ -1,5 +1,6 @@
 package com.iqlearning.context.activities;
 
+import com.iqlearning.context.Objects.LoggedUser;
 import com.iqlearning.database.entities.Session;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.interfaces.ISessionService;

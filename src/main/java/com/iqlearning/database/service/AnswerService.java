@@ -5,10 +5,12 @@ import com.iqlearning.database.entities.Question;
 import com.iqlearning.database.repository.AnswerRepository;
 import com.iqlearning.database.service.interfaces.IAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AnswerService implements IAnswerService {
 
     @Autowired
