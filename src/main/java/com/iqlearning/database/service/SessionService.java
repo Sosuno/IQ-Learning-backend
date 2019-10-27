@@ -5,6 +5,7 @@ package com.iqlearning.database.service;
 
 import com.iqlearning.database.entities.Session;
 import com.iqlearning.database.repository.SessionRepository;
+import com.iqlearning.database.service.interfaces.ISessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class SessionService implements ISessionService{
+public class SessionService implements ISessionService {
 
     @Autowired
     private SessionRepository repo;

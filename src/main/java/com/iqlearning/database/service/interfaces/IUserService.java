@@ -1,4 +1,4 @@
-package com.iqlearning.database.service;
+package com.iqlearning.database.service.interfaces;
 /*****
  * Author: Ewa Jasinska
  */
