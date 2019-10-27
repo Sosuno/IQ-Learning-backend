@@ -16,7 +16,7 @@ public class Question {
     @Column(name = "question", nullable = false)
     private String question;
     @Column(name = "choice_test", nullable = false)
-    private boolean choice_test;
+    private boolean choiceTest;
     @Column(name = "shareable", nullable = false)
     private boolean shareable;
 
@@ -24,7 +24,7 @@ public class Question {
         this.owner = owner;
         this.subject = subject;
         this.question = question;
-        this.choice_test = choice_test;
+        this.choiceTest = choice_test;
         this.shareable = shareable;
     }
 
@@ -61,11 +61,11 @@ public class Question {
     }
 
     public boolean isChoice_test() {
-        return choice_test;
+        return choiceTest;
     }
 
     public void setChoice_test(boolean choice_test) {
-        this.choice_test = choice_test;
+        this.choiceTest = choice_test;
     }
 
     public boolean isShareable() {

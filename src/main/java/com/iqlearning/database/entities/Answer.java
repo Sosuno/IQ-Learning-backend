@@ -10,14 +10,14 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "question_id", nullable = false)
-    private Long question_id;
+    private Long questionId;
     @Column(name = "answer", nullable = false)
     private String answer;
     @Column(name = "correct", nullable = false)
     private boolean correct;
 
     public Answer(Long question_id, String answer, boolean correct) {
-        this.question_id = question_id;
+        this.questionId = question_id;
         this.answer = answer;
         this.correct = correct;
     }
@@ -31,11 +31,11 @@ public class Answer {
     }
 
     public Long getQuestion_id() {
-        return question_id;
+        return questionId;
     }
 
     public void setQuestion_id(Long question_id) {
-        this.question_id = question_id;
+        this.questionId = question_id;
     }
 
     public String getAnswer() {

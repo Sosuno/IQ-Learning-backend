@@ -4,6 +4,7 @@ package com.iqlearning.database.service;
  */
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.repository.UserRepository;
+import com.iqlearning.database.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements IUserService{
+public class UserService implements IUserService {
 
     @Autowired
     private UserRepository repo;

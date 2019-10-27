@@ -2,8 +2,8 @@ package com.iqlearning.context.activities;
 
 import com.iqlearning.database.entities.Session;
 import com.iqlearning.database.entities.User;
-import com.iqlearning.database.service.ISessionService;
-import com.iqlearning.database.service.IUserService;
+import com.iqlearning.database.service.interfaces.ISessionService;
+import com.iqlearning.database.service.interfaces.IUserService;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
