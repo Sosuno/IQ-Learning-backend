@@ -1,15 +1,14 @@
 package com.iqlearning.rest;
 
 import com.iqlearning.context.activities.AccountManagement;
-import com.iqlearning.context.activities.LoggedUser;
-import com.iqlearning.database.service.ISessionService;
-import com.iqlearning.database.service.IUserService;
+import com.iqlearning.context.Objects.LoggedUser;
+import com.iqlearning.database.service.interfaces.ISessionService;
+import com.iqlearning.database.service.interfaces.IUserService;
 import com.iqlearning.rest.resource.LoginForm;
 import com.iqlearning.rest.resource.RegisterForm;
 import com.iqlearning.rest.resource.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
