@@ -43,7 +43,6 @@ public class User{
     @Column(name = "login_tries", nullable = false)
     private int loginTries;
 
-
     public User() {
     }
 

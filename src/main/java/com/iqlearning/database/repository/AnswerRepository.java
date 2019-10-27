@@ -12,5 +12,6 @@ public interface AnswerRepository extends CrudRepository<Answer,Long> {
 
     List<Answer> getAllByQuestionId(Long questionId);
     Optional<Answer> getAllByQuestionIdAndCorrect(Long questionId,boolean correct);
+    void deleteAllByQuestionId(Long questionId);
 
 }

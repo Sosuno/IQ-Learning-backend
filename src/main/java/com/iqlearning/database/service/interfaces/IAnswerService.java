@@ -17,5 +17,6 @@ public interface IAnswerService {
 
     void deleteAnswer(Answer a);
     void deleteAnswer(Long id);
+    void deleteAnswers(Long id);
 
 }
