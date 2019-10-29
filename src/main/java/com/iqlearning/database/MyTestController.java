@@ -123,19 +123,6 @@ public class MyTestController {
 
         return list;
     }
-    /*
-
-    Question saveQuestion(Question q);
-
-    void deleteQuestion(Question q);
-    void deleteQuestion(Long id);
-
-
-
-
-     */
-
-
 
     /**************
      * Accuont managaer
