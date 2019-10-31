@@ -87,24 +87,13 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user/username")
-    public ResponseEntity<?> editUsername(@RequestHeader Map<String, String> headers, @RequestBody LoginForm loginForm) {
-        String token = headers.get("authorization").split(" ")[1];
-        User user = userService.getUserBySession(token);
-        if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        else {
-            if(loginForm.getUsername() != null) user.setUsername(loginForm.getUsername());
-            return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
-        }
-    }
-
     @PostMapping("/user/password")
     public ResponseEntity<?> editPassword(@RequestHeader Map<String, String> headers, @RequestBody PasswordForm passwordForm) {
         String token = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(token);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         else if(!passwordForm.getCurrentPass().equals(user.getPassword())) {
-            return new ResponseEntity<>("Current password doesn't match" + user.getPassword(), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Current password doesn't match" + user.getPassword(), HttpStatus.BAD_REQUEST);
         } else {
             user.setPassword(passwordForm.getNewPass());
             return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
