@@ -163,17 +163,7 @@ public class MyTestController {
 
         return users;
     }
-    @RequestMapping(value = "/test/Acc/logout", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    @ResponseBody
-    public Session logout() {
 
-        AccountManagement acc = new AccountManagement(userService,sessionService);
-        s = sessionService.getSession("1234-1234-1234-1234");
-        acc.logout(s.getSessionID(),userService.getUser(s.getUserID()).getUsername());
-        acc.logout("123","Archangel");
-        s = sessionService.getSession("1234-1234-1234-1234");
-        return s;
-    }
     @RequestMapping(value = "/test/Acc/signin", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
     public List<LoggedUser> signin() {

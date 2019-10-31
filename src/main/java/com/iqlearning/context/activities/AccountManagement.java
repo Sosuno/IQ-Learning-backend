@@ -72,9 +72,9 @@ public class AccountManagement {
         return loggedUser;
     }
 
-    public void logout(String sessionId, String username){
-        user = service.getUserByUsername(username);
-        changeStatus(0);
+    public void logout(String sessionId){
+        //user = service.getUserByUsername(username);
+        //changeStatus(0);
         sessionService.deleteSession(sessionId);
     }
 
