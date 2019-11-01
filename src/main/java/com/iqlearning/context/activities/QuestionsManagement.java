@@ -33,7 +33,7 @@ public class QuestionsManagement {
         Question toDbQ = new Question(q.getOwner(),q.getSubject().getId(),q.getQuestion(),q.isChoiceTest(),q.isShareable());
         toDbQ = questionService.saveQuestion(toDbQ);
 
-        if(q.isChoiceTest()){
+        if(!q.isChoiceTest()){
             List<Answer> answers = q.getAnswers();
             for(Answer a: answers){
                 a.setQuestion_id(toDbQ.getId());
