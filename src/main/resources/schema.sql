@@ -36,7 +36,7 @@ CREATE TABLE questions(
                     question VARCHAR NOT NULL,
                     choice_test BOOLEAN NOT NULL,
                     shareable BOOLEAN NOT NULL,
-                    created TIMESTAMP NOT NULL,
+                    created TIMESTAMP,
                     last_edited TIMESTAMP,
                     FOREIGN KEY (owner) REFERENCES users(id),
                     FOREIGN KEY (subject) REFERENCES subjects(id)
@@ -47,7 +47,7 @@ CREATE TABLE answers(
                     question_id BIGINT NOT NULL,
                     answer VARCHAR NOT NULL,
                     correct BOOLEAN NOT NULL,
-                    created TIMESTAMP NOT NULL,
+                    created TIMESTAMP,
                     last_edited TIMESTAMP,
                     FOREIGN KEY (question_id) REFERENCES questions(id)
                   );
