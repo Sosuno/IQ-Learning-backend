@@ -31,6 +31,7 @@ public class QuestionsManagement {
 
     public Question addQuestion(FilledQuestion q) {
         Question toDbQ = new Question(q.getOwner(),q.getSubject().getId(),q.getQuestion(),q.isChoiceTest(),q.isShareable());
+        if(q.getId() != null) toDbQ.setId(q.getId());
         toDbQ = questionService.saveQuestion(toDbQ);
 
         if(q.isChoiceTest()){
