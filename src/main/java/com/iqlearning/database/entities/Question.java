@@ -1,6 +1,7 @@
 package com.iqlearning.database.entities;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "questions")
@@ -19,6 +20,11 @@ public class Question {
     private boolean choiceTest;
     @Column(name = "shareable", nullable = false)
     private boolean shareable;
+    @Column(name = "created", nullable = false)
+    private Timestamp created;
+    @Column(name = "last_edited")
+    private Timestamp lastEdited;
+
 
     public Question(Long owner, Long subject, String question, boolean choice_test, boolean shareable) {
         this.owner = owner;
@@ -27,6 +33,17 @@ public class Question {
         this.choiceTest = choice_test;
         this.shareable = shareable;
     }
+
+    public Question(Long owner, Long subject, String question, boolean choiceTest, boolean shareable, Timestamp created, Timestamp lastEdited) {
+        this.owner = owner;
+        this.subject = subject;
+        this.question = question;
+        this.choiceTest = choiceTest;
+        this.shareable = shareable;
+        this.created = created;
+        this.lastEdited = lastEdited;
+    }
+
     public Question() {
 
     }
@@ -77,5 +94,21 @@ public class Question {
 
     public void setShareable(boolean shareable) {
         this.shareable = shareable;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
+    public Timestamp getLastEdited() {
+        return lastEdited;
+    }
+
+    public void setLastEdited(Timestamp lastEdited) {
+        this.lastEdited = lastEdited;
     }
 }

@@ -2,6 +2,7 @@ package com.iqlearning.rest;
 
 import com.iqlearning.context.activities.AccountManagement;
 import com.iqlearning.context.objects.LoggedUser;
+import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.interfaces.ISessionService;
 import com.iqlearning.database.service.interfaces.IUserService;
 import com.iqlearning.rest.resource.LoginForm;
@@ -52,16 +53,19 @@ public class APIController {
         } else return auth(user.getSessionID(),user);
     }
 
-    @PostMapping("/user/logout")
-    public ResponseEntity<?> logoutUser(@RequestBody Token token) {
+    @DeleteMapping("/user/logout")
+    public ResponseEntity<?> logoutUser(@RequestHeader Map<String, String> headers) {
+        String session = headers.get("authorization").split(" ")[1];
         acc = new AccountManagement(userService,sessionService);
-        acc.logout(token.getToken(), userService.getUserBySession(token.getToken()).getUsername());
-        if(sessionService.getSession(token.getToken()) != null) {
+        User u = userService.getUserBySession(session);
+        if (u.getId() == -1L) return new ResponseEntity<>("No such session in database",HttpStatus.UNAUTHORIZED);
+        acc.logout(session);
+        if(sessionService.getSession(session) != null) {
             return new ResponseEntity<>( "Logout unsuccessful", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>( "Logout successful", HttpStatus.OK);
     }
 
-    @GetMapping("/user/refresh")
+    @GetMapping("/user/fetch")
     public ResponseEntity<?> getUserByToken(@RequestHeader Map<String, String> headers) {
         acc = new AccountManagement(userService,sessionService);
         String session = headers.get("authorization").split(" ")[1];
