@@ -1,6 +1,6 @@
 package com.iqlearning.context.activities;
 
-
+import java.sql.Timestamp;
 import com.iqlearning.context.objects.FilledQuestion;
 import com.iqlearning.database.entities.Answer;
 import com.iqlearning.database.entities.Question;
@@ -30,8 +30,18 @@ public class QuestionsManagement {
     }
 
     public Question addQuestion(FilledQuestion q) {
-        Question toDbQ = new Question(q.getOwner(),q.getSubject().getId(),q.getQuestion(),q.isChoiceTest(),q.isShareable());
-        if(q.getId() != null) toDbQ.setId(q.getId());
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        Timestamp created;
+        Question toDbQ;
+        if(q.getId() == null) {
+            toDbQ = new Question(q.getOwner(), q.getSubject().getId(), q.getQuestion(), q.isChoiceTest(), q.isShareable(), now,now);
+        }
+        else {
+            Question old = questionService.get(q.getId());
+            created = old.getCreated();
+            toDbQ = new Question(q.getOwner(), q.getSubject().getId(), q.getQuestion(), q.isChoiceTest(), q.isShareable(),created,now);
+            toDbQ.setId(q.getId());
+        }
         toDbQ = questionService.saveQuestion(toDbQ);
 
         if(q.isChoiceTest()){

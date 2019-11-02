@@ -44,6 +44,15 @@ public class Question {
         this.lastEdited = lastEdited;
     }
 
+    public Question(Long owner, Long subject, String question, boolean choiceTest, boolean shareable, Timestamp lastEdited) {
+        this.owner = owner;
+        this.subject = subject;
+        this.question = question;
+        this.choiceTest = choiceTest;
+        this.shareable = shareable;
+        this.lastEdited = lastEdited;
+    }
+
     public Question() {
 
     }

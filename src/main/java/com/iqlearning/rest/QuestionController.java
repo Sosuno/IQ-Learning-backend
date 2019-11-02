@@ -2,7 +2,6 @@ package com.iqlearning.rest;
 
 import com.iqlearning.context.activities.QuestionsManagement;
 import com.iqlearning.context.objects.FilledQuestion;
-import java.sql.Timestamp;
 
 import com.iqlearning.database.entities.Answer;
 import com.iqlearning.database.entities.Question;
@@ -56,46 +55,62 @@ public class QuestionController {
         que = new QuestionsManagement(questionService, answerService, subjectService);
         if(filledQuestion.getSubject() == null || filledQuestion.getQuestion() == null
                 || (filledQuestion.isChoiceTest() && filledQuestion.getAnswers() == null)) {
-            return new ResponseEntity<>( filledQuestion, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(filledQuestion, HttpStatus.BAD_REQUEST);
         }
         Question addedQuestion = que.addQuestion(filledQuestion);
         if(addedQuestion != null) {
             return new ResponseEntity<>(addedQuestion, HttpStatus.OK);
         } else return new ResponseEntity<>(filledQuestion, HttpStatus.BAD_REQUEST);
     }
-
     @PostMapping("/question/delete")
     public ResponseEntity<?> deleteQuestion(@RequestHeader Map<String, String> headers, @RequestBody IdForm idForm) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        List<Question> questionList = questionService.getAllUserQuestions(user.getId());
-        List<FilledQuestion> filledQuestionList = que.getReadyQuestions(questionList);
-        for (FilledQuestion q: filledQuestionList) {
-            if(q.getId() == idForm.getId()) {
-                for(Answer a: q.getAnswers()) {
+        Question questionToDelete = questionService.get(idForm.getId());
+        FilledQuestion question = que.getReadyQuestion(questionToDelete);
+        if(question == null) {
+            return new ResponseEntity<>("Question not found", HttpStatus.BAD_REQUEST);
+        } else {
+            if(question.isChoiceTest()) {
+                for (Answer a : question.getAnswers()) {
                     answerService.deleteAnswer(a.getId());
                 }
-                questionService.deleteQuestion(idForm.getId());
-                return new ResponseEntity<>( "Question deleted", HttpStatus.OK);
             }
+            questionService.deleteQuestion(idForm.getId());
+            return new ResponseEntity<>( "Question deleted", HttpStatus.OK);
         }
-        return new ResponseEntity<>( "Bad question id", HttpStatus.BAD_REQUEST);
     }
     @PostMapping("/question/update")
     public ResponseEntity<?> updateQuestion(@RequestHeader Map<String, String> headers, @RequestBody FilledQuestion filledQuestion) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
+        Boolean isTrue = false;
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        List<Question> questionList = questionService.getAllUserQuestions(user.getId());
-        List<FilledQuestion> filledQuestionList = que.getReadyQuestions(questionList);
-        for (FilledQuestion q: filledQuestionList) {
-            if(q.getId() == filledQuestion.getId()) {
-
-                return new ResponseEntity<>( "Question updated", HttpStatus.OK);
-            }
+        if(filledQuestion.getId() == null) return new ResponseEntity<>("Question id is null", HttpStatus.BAD_REQUEST);
+        if(filledQuestion.getOwner() == null) return new ResponseEntity<>("Owner id is null", HttpStatus.BAD_REQUEST);
+        if(filledQuestion.getSubject() == null || filledQuestion.getQuestion() == null
+                || (filledQuestion.isChoiceTest() && filledQuestion.getAnswers() == null)) {
+            return new ResponseEntity<>(filledQuestion, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>( "Bad question id" + filledQuestion.getId(), HttpStatus.BAD_REQUEST);
+        if(filledQuestion.isChoiceTest()) {
+            for(Answer a : filledQuestion.getAnswers()) {
+                if(a.getAnswer() == null) return new ResponseEntity<>("Answer text is null", HttpStatus.BAD_REQUEST);
+                if(a.isCorrect()) isTrue=true;
+            }
+            if(!isTrue) return new ResponseEntity<>("One answer must be the good answer", HttpStatus.BAD_REQUEST);
+        }
+        Question questionToUpdate = questionService.get(filledQuestion.getId());
+        if(questionToUpdate == null) {
+            return new ResponseEntity<>("Question not found", HttpStatus.BAD_REQUEST);
+        }
+        if(filledQuestion.getOwner() != user.getId()) {
+            return new ResponseEntity<>("Owner id does not match logged user id", HttpStatus.BAD_REQUEST);
+        }
+        FilledQuestion updatedQuestion = que.getReadyQuestion(que.addQuestion(filledQuestion));
+        if(updatedQuestion == null) {
+            return new ResponseEntity<>(filledQuestion, HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>(filledQuestion, HttpStatus.OK);
     }
     @GetMapping("/question/get/user")
     public ResponseEntity<?> getQuestionsByUser(@RequestHeader Map<String, String> headers){
