@@ -27,6 +27,7 @@ public interface IQuestionService {
     List<Question> getAllNonShareableOpenOfUserBySubject(Long userId, Long subjectId);
     List<Question> getAllShareableClosedOfUserBySubject(Long userId, Long subjectId);
     List<Question> getAllShareableOpenOfUserBySubject(Long userId, Long subjectId);
+    Question get(Long questionId);
 
 
     Question saveQuestion(Question q);
