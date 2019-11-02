@@ -52,15 +52,16 @@ public class QuestionController {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        List<Question> questionList = questionService.getAllUserQuestions(user.getId());
-        int length = questionList.size();
         filledQuestion.setOwner(user.getId());
         que = new QuestionsManagement(questionService, answerService, subjectService);
-        que.addQuestion(filledQuestion);
-        List<Question> updatedQuestionList = questionService.getAllUserQuestions(user.getId());
-        if(updatedQuestionList.size() > length) {
-            return new ResponseEntity<>("Question added", HttpStatus.OK);
-        } else return new ResponseEntity<>( "Question not added", HttpStatus.BAD_REQUEST);
+        if(filledQuestion.getSubject() == null || filledQuestion.getQuestion() == null
+                || (filledQuestion.isChoiceTest() && filledQuestion.getAnswers() == null)) {
+            return new ResponseEntity<>( filledQuestion, HttpStatus.BAD_REQUEST);
+        }
+        Question addedQuestion = que.addQuestion(filledQuestion);
+        if(addedQuestion != null) {
+            return new ResponseEntity<>(addedQuestion, HttpStatus.OK);
+        } else return new ResponseEntity<>(filledQuestion, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/question/delete")
@@ -90,11 +91,7 @@ public class QuestionController {
         List<FilledQuestion> filledQuestionList = que.getReadyQuestions(questionList);
         for (FilledQuestion q: filledQuestionList) {
             if(q.getId() == filledQuestion.getId()) {
-                q.setQuestion(filledQuestion.getQuestion());
-                q.setChoiceTest(filledQuestion.isChoiceTest());
-                q.setShareable(filledQuestion.isShareable());
-                q.setAnswers(filledQuestion.getAnswers());
-                //TODO SAVE INTO DB
+
                 return new ResponseEntity<>( "Question updated", HttpStatus.OK);
             }
         }
