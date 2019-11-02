@@ -12,10 +12,10 @@ import com.iqlearning.database.service.interfaces.ISubjectService;
 import com.iqlearning.database.service.interfaces.IUserService;
 import com.iqlearning.database.service.interfaces.IQuestionService;
 import com.iqlearning.rest.resource.IdForm;
+import com.iqlearning.rest.resource.TimestampForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -125,5 +125,11 @@ public class QuestionController {
             return new ResponseEntity<>("Question list empty" , HttpStatus.OK);
         } else return new ResponseEntity<>(filledQuestionList , HttpStatus.OK);
     }
-
+    @PostMapping("/question/get/date")
+    public ResponseEntity<?> getQuestionsByUser(@RequestHeader Map<String, String> headers, @RequestBody TimestampForm timestampForm){
+        /*
+        todo
+         */
+        return new ResponseEntity<>("todo",HttpStatus.NOT_ACCEPTABLE);
+    }
 }

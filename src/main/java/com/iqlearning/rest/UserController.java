@@ -70,7 +70,6 @@ public class UserController {
         if (u.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         acc.logout(token);
         if(sessionService.getSession(token) != null) {
-
             return new ResponseEntity<>( "Logout unsuccessful", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>( "Logout successful", HttpStatus.OK);
     }
