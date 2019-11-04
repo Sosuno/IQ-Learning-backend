@@ -11,20 +11,14 @@ import com.iqlearning.database.service.interfaces.ISessionService;
 import com.iqlearning.database.service.interfaces.ISubjectService;
 import com.iqlearning.database.service.interfaces.IUserService;
 import com.iqlearning.database.service.interfaces.IQuestionService;
-import com.iqlearning.rest.resource.IdForm;
-import com.iqlearning.rest.resource.TimestampForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,22 +56,22 @@ public class QuestionController {
             return new ResponseEntity<>(addedQuestion, HttpStatus.OK);
         } else return new ResponseEntity<>(filledQuestion, HttpStatus.BAD_REQUEST);
     }
-    @PostMapping("/question/delete")
-    public ResponseEntity<?> deleteQuestion(@RequestHeader Map<String, String> headers, @RequestBody IdForm idForm) {
+    @DeleteMapping("/question/delete/{id}")
+    public ResponseEntity<?> deleteQuestion(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        Question questionToDelete = questionService.get(idForm.getId());
-        FilledQuestion question = que.getReadyQuestion(questionToDelete);
-        if(question == null) {
+        Question questionToDelete = questionService.get(id);
+        if(questionToDelete == null) {
             return new ResponseEntity<>("Question not found", HttpStatus.BAD_REQUEST);
         } else {
+            FilledQuestion question = que.getReadyQuestion(questionToDelete);
             if(question.isChoiceTest()) {
                 for (Answer a : question.getAnswers()) {
                     answerService.deleteAnswer(a.getId());
                 }
             }
-            questionService.deleteQuestion(idForm.getId());
+            questionService.deleteQuestion(id);
             return new ResponseEntity<>( "Question deleted", HttpStatus.OK);
         }
     }
@@ -125,11 +119,33 @@ public class QuestionController {
             return new ResponseEntity<>("Question list empty" , HttpStatus.OK);
         } else return new ResponseEntity<>(filledQuestionList , HttpStatus.OK);
     }
-    @PostMapping("/question/get/date")
-    public ResponseEntity<?> getQuestionsByUser(@RequestHeader Map<String, String> headers, @RequestBody TimestampForm timestampForm){
+    @GetMapping("/question/get/date/{timestamp}")
+    public ResponseEntity<?> getQuestionsByUser(@RequestHeader Map<String, String> headers, @PathVariable Timestamp timestamp){
         /*
         todo
          */
         return new ResponseEntity<>("todo",HttpStatus.NOT_ACCEPTABLE);
     }
+    @GetMapping("/question/get/subject/{id}")
+    public ResponseEntity<?> getQuestionsBSubject(@RequestHeader Map<String, String> headers, @PathVariable Long id){
+        String session = headers.get("authorization").split(" ")[1];
+        User user = userService.getUserBySession(session);
+        if(sessionService.getSession(session) == null) {
+            return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
+        }
+        List<Question> questionListReady = new ArrayList<>();
+        List<Question> questionList = questionService.getAllUserQuestions(user.getId());
+        for(Question q : questionList) {
+            if(q.getSubject() == id) {
+                questionListReady.add(q);
+            }
+        }
+        if(questionListReady.isEmpty()) {
+            return new ResponseEntity<>("Question list empty", HttpStatus.BAD_REQUEST);
+        }
+        List<FilledQuestion> filledQuestionList = que.getReadyQuestions(questionListReady);
+        return new ResponseEntity<>(filledQuestionList , HttpStatus.OK);
+    }
+
+
 }
