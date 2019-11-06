@@ -16,62 +16,62 @@ public class QuestionService implements IQuestionService {
 
     @Override
     public List<Question> getAllUserQuestions(Long userId) {
-        return repo.getAllByOwner(userId);
+        return repo.getAllByOwnerOrderByLastEditedDesc(userId);
     }
 
     @Override
     public List<Question> getAllSharedQuestionsByUser(Long userId) {
-        return repo.getAllByOwnerAndShareable(userId,true);
+        return repo.getAllByOwnerAndShareableOrderByLastEditedDesc(userId,true);
     }
 
     @Override
     public List<Question> getAllSharedQuestions() {
-        return repo.getAllByShareable(true);
+        return repo.getAllByShareableOrderByLastEditedDesc(true);
     }
 
     @Override
     public List<Question> getAllSharedQuestionsForSubject(Subject subject) {
-        return repo.getAllBySubject(subject.getId());
+        return repo.getAllBySubjectOrderByLastEditedDesc(subject.getId());
     }
 
     @Override
     public List<Question> getAllSharedQuestionsForSubject(Long subjectId) {
-        return repo.getAllBySubject(subjectId);
+        return repo.getAllBySubjectOrderByLastEditedDesc(subjectId);
     }
 
     @Override
     public List<Question> getAllOpenQuestionsByUser(Long userId) {
-        return repo.getAllByOwnerAndChoiceTest(userId,false);
+        return repo.getAllByOwnerAndChoiceTestOrderByLastEditedDesc(userId,false);
     }
 
     @Override
     public List<Question> getAllOpenQuestionsForSubject(Subject subject) {
-        return repo.getAllBySubjectAndChoiceTest(subject.getId(),false);
+        return repo.getAllBySubjectAndChoiceTestOrderByLastEditedDesc(subject.getId(),false);
     }
 
     @Override
     public List<Question> getAllOpenQuestionsForSubject(Long subjectId) {
-        return repo.getAllBySubjectAndChoiceTest(subjectId,false);
+        return repo.getAllBySubjectAndChoiceTestOrderByLastEditedDesc(subjectId,false);
     }
 
     @Override
     public List<Question> getAllClosedQuestionsByUser(Long userId) {
-        return repo.getAllByOwnerAndChoiceTest(userId,true);
+        return repo.getAllByOwnerAndChoiceTestOrderByLastEditedDesc(userId,true);
     }
 
     @Override
     public List<Question> getAllClosedQuestionsForSubjectForUser(Subject subject, Long userId) {
-        return repo.getAllBySubjectAndOwnerAndChoiceTest(subject.getId(),userId,true);
+        return repo.getAllBySubjectAndOwnerAndChoiceTestOrderByLastEditedDesc(subject.getId(),userId,true);
     }
 
     @Override
     public List<Question> getAllClosedQuestionsForSubjectForUser(Long subjectId, Long userId) {
-        return repo.getAllBySubjectAndOwnerAndChoiceTest(subjectId,userId,true);
+        return repo.getAllBySubjectAndOwnerAndChoiceTestOrderByLastEditedDesc(subjectId,userId,true);
     }
 
     @Override
     public List<Question> searchQuestion(String s) {
-        return repo.getAllByQuestionContains(s);
+        return repo.getAllByQuestionContainsOrderByLastEditedDesc(s);
     }
 
     @Override
@@ -91,36 +91,36 @@ public class QuestionService implements IQuestionService {
 
     @Override
     public List<Question> getAllQuestionForSubjectOfUser(Long userId, Long subject) {
-        return repo.getAllBySubjectAndOwner(subject,userId);
+        return repo.getAllBySubjectAndOwnerOrderByLastEditedDesc(subject,userId);
     }
 
     @Override
     public List<Question> getAllShareableOfUserBySubject(Long userId, Long subjectId) {
-        return repo.getAllBySubjectAndOwnerAndShareable(subjectId,userId,true);
+        return repo.getAllBySubjectAndOwnerAndShareableOrderByLastEditedDesc(subjectId,userId,true);
     }
 
     @Override
     public List<Question> getAllNonShareableOfUserBySubject(Long userId, Long subjectId) {
-        return repo.getAllBySubjectAndOwnerAndShareable(subjectId,userId,false);
+        return repo.getAllBySubjectAndOwnerAndShareableOrderByLastEditedDesc(subjectId,userId,false);
     }
 
     @Override
     public List<Question> getAllNonShareableClosedOfUserBySubject(Long userId, Long subjectId) {
-        return repo.getAllBySubjectAndOwnerAndShareableAndChoiceTest(subjectId,userId,false,true);
+        return repo.getAllBySubjectAndOwnerAndShareableAndChoiceTestOrderByLastEditedDesc(subjectId,userId,false,true);
     }
 
     @Override
     public List<Question> getAllNonShareableOpenOfUserBySubject(Long userId, Long subjectId) {
-        return repo.getAllBySubjectAndOwnerAndShareableAndChoiceTest(subjectId,userId,false,false);
+        return repo.getAllBySubjectAndOwnerAndShareableAndChoiceTestOrderByLastEditedDesc(subjectId,userId,false,false);
     }
 
     @Override
     public List<Question> getAllShareableClosedOfUserBySubject(Long userId, Long subjectId) {
-        return repo.getAllBySubjectAndOwnerAndShareableAndChoiceTest(subjectId,userId,true,true);
+        return repo.getAllBySubjectAndOwnerAndShareableAndChoiceTestOrderByLastEditedDesc(subjectId,userId,true,true);
     }
 
     @Override
     public List<Question> getAllShareableOpenOfUserBySubject(Long userId, Long subjectId) {
-        return repo.getAllBySubjectAndOwnerAndShareableAndChoiceTest(subjectId,userId,true,false);
+        return repo.getAllBySubjectAndOwnerAndShareableAndChoiceTestOrderByLastEditedDesc(subjectId,userId,true,false);
     }
 }

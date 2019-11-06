@@ -9,8 +9,12 @@ public class LoggedUser {
     private String username;
     private String name;
     private String surname;
-    //TODO avatar handling
     private String avatar;
+    private String bio;
+    private String linkedIn;
+    private String twitter;
+    private String reddit;
+    private String youtube;
     private String email;
     private String sessionID;
 
@@ -24,7 +28,14 @@ public class LoggedUser {
         this.surname = user.getSurname();
         this.email = user.getEmail();
         this.sessionID = sessionID;
+        this.avatar = user.getAvatar();
+        this.bio = user.getBio();
+        this.linkedIn = user.getLinkedIn();
+        this.twitter = user.getTwitter();
+        this.reddit = user.getReddit();
+        this.youtube = user.getYoutube();
     }
+
 
     public Long getId() {
         return id;
@@ -81,4 +92,46 @@ public class LoggedUser {
     public void setSessionID(String sessionID) {
         this.sessionID = sessionID;
     }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getLinkedIn() {
+        return linkedIn;
+    }
+
+    public void setLinkedIn(String linkedIn) {
+        this.linkedIn = linkedIn;
+    }
+
+    public String getTwitter() {
+        return twitter;
+    }
+
+    public void setTwitter(String twitter) {
+        this.twitter = twitter;
+    }
+
+    public String getReddit() {
+        return reddit;
+    }
+
+    public void setReddit(String reddit) {
+        this.reddit = reddit;
+    }
+
+    public String getYoutube() {
+        return youtube;
+    }
+
+    public void setYoutube(String youtube) {
+        this.youtube = youtube;
+    }
+
+
 }

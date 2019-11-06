@@ -42,6 +42,18 @@ public class User{
     private Timestamp creationTime;
     @Column(name = "login_tries", nullable = false)
     private int loginTries;
+    @Column(name = "avatar")
+    private String avatar;
+    @Column(name = "bio")
+    private String bio;
+    @Column(name = "linkedId")
+    private String linkedIn;
+    @Column(name = "twitter")
+    private String twitter;
+    @Column(name = "reddit")
+    private String reddit;
+    @Column(name = "youtube")
+    private String youtube;
 
     public User() {
     }
@@ -55,6 +67,23 @@ public class User{
         this.status = status;
         this.creationTime = creationTime;
         this.loginTries = loginTries;
+    }
+
+    public User(String name, String surname, String username, String password, String email, int status, Timestamp creationTime, int loginTries, String avatar, String bio, String linkedIn, String twitter, String reddit, String youtube) {
+        this.name = name;
+        this.surname = surname;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.status = status;
+        this.creationTime = creationTime;
+        this.loginTries = loginTries;
+        this.avatar = avatar;
+        this.bio = bio;
+        this.linkedIn = linkedIn;
+        this.twitter = twitter;
+        this.reddit = reddit;
+        this.youtube = youtube;
     }
 
     public User(boolean exists){
@@ -135,6 +164,54 @@ public class User{
         this.loginTries = loginTries;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getLinkedIn() {
+        return linkedIn;
+    }
+
+    public void setLinkedIn(String linkedIn) {
+        this.linkedIn = linkedIn;
+    }
+
+    public String getTwitter() {
+        return twitter;
+    }
+
+    public void setTwitter(String twitter) {
+        this.twitter = twitter;
+    }
+
+    public String getReddit() {
+        return reddit;
+    }
+
+    public void setReddit(String reddit) {
+        this.reddit = reddit;
+    }
+
+    public String getYoutube() {
+        return youtube;
+    }
+
+    public void setYoutube(String youtube) {
+        this.youtube = youtube;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -170,7 +247,7 @@ public class User{
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("City{");
+        final StringBuilder sb = new StringBuilder("User{");
         sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
         sb.append(", surname='").append(surname).append('\'');
