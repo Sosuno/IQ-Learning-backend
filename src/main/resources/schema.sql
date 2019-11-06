@@ -13,7 +13,13 @@ CREATE TABLE users(
                     email VARCHAR(100) UNIQUE NOT NULL,
                     status int NOT NULL,
                     creation_time TIMESTAMP NOT NULL,
-                    login_tries int
+                    login_tries int,
+                    avatar VARCHAR DEFAULT NULL,
+                    bio VARCHAR DEFAULT NULL,
+                    linkedIn VARCHAR DEFAULT NULL,
+                    twitter VARCHAR DEFAULT NULL,
+                    reddit VARCHAR DEFAULT NULL,
+                    youtube VARCHAR DEFAULT NULL
                   );
 
 CREATE TABLE sessions(
