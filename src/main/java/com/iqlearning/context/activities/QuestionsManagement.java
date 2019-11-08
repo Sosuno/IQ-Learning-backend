@@ -1,6 +1,6 @@
 package com.iqlearning.context.activities;
 
-import java.sql.Timestamp;
+
 import com.iqlearning.context.objects.FilledQuestion;
 import com.iqlearning.database.entities.Answer;
 import com.iqlearning.database.entities.Question;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,17 +31,12 @@ public class QuestionsManagement {
     }
 
     public Question addQuestion(FilledQuestion q) {
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        Timestamp created;
-        Question toDbQ;
-        if(q.getId() == null) {
-            toDbQ = new Question(q.getOwner(), q.getSubject().getId(), q.getQuestion(), q.isChoiceTest(), q.isShareable(), now,now);
-        }
-        else {
-            Question old = questionService.get(q.getId());
-            created = old.getCreated();
-            toDbQ = new Question(q.getOwner(), q.getSubject().getId(), q.getQuestion(), q.isChoiceTest(), q.isShareable(),created,now);
+        Question toDbQ = new Question(q.getOwner(),q.getSubject().getId(),q.getQuestion(),q.isChoiceTest(),q.isShareable());
+        toDbQ.setLastEdited(new Timestamp(System.currentTimeMillis()));
+        if(q.getId() != null) {
             toDbQ.setId(q.getId());
+        }else {
+            toDbQ.setCreated(new Timestamp(System.currentTimeMillis()));
         }
         toDbQ = questionService.saveQuestion(toDbQ);
 
@@ -48,6 +44,8 @@ public class QuestionsManagement {
             List<Answer> answers = q.getAnswers();
             for(Answer a: answers){
                 a.setQuestion_id(toDbQ.getId());
+                a.setCreated(new Timestamp(System.currentTimeMillis()));
+                a.setLastEdited(new Timestamp(System.currentTimeMillis()));
                 answerService.saveAnswer(a);
             }
         }

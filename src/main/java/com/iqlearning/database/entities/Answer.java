@@ -1,6 +1,7 @@
 package com.iqlearning.database.entities;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name="answers")
@@ -15,6 +16,11 @@ public class Answer {
     private String answer;
     @Column(name = "correct", nullable = false)
     private boolean correct;
+    @Column(name = "created", nullable = false)
+    private Timestamp created;
+    @Column(name = "last_edited")
+    private Timestamp lastEdited;
+
 
     public Answer(Long question_id, String answer, boolean correct) {
         this.questionId = question_id;
@@ -55,6 +61,22 @@ public class Answer {
 
     public void setCorrect(boolean correct) {
         this.correct = correct;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
+    public Timestamp getLastEdited() {
+        return lastEdited;
+    }
+
+    public void setLastEdited(Timestamp lastEdited) {
+        this.lastEdited = lastEdited;
     }
 
 

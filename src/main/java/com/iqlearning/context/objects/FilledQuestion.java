@@ -23,6 +23,7 @@ public class FilledQuestion {
 
     public FilledQuestion(Question q) {
         id = q.getId();
+        owner = q.getOwner();
         question = q.getQuestion();
         choiceTest = q.isChoice_test();
         shareable = q.isShareable();

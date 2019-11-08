@@ -29,7 +29,6 @@ public interface IQuestionService {
     List<Question> getAllShareableOpenOfUserBySubject(Long userId, Long subjectId);
     Question get(Long questionId);
 
-
     Question saveQuestion(Question q);
 
     void deleteQuestion(Question q);

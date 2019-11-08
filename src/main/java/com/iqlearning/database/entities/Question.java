@@ -26,6 +26,14 @@ public class Question {
     private Timestamp lastEdited;
 
 
+    public Question(Long owner, Long subject, String question, boolean choice_test, boolean shareable) {
+        this.owner = owner;
+        this.subject = subject;
+        this.question = question;
+        this.choiceTest = choice_test;
+        this.shareable = shareable;
+    }
+
     public Question(Long owner, Long subject, String question, boolean choiceTest, boolean shareable, Timestamp created, Timestamp lastEdited) {
         this.owner = owner;
         this.subject = subject;

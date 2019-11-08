@@ -13,7 +13,13 @@ CREATE TABLE users(
                     email VARCHAR(100) UNIQUE NOT NULL,
                     status int NOT NULL,
                     creation_time TIMESTAMP NOT NULL,
-                    login_tries int
+                    login_tries int,
+                    avatar VARCHAR DEFAULT NULL,
+                    bio VARCHAR DEFAULT NULL,
+                    linkedIn VARCHAR DEFAULT NULL,
+                    twitter VARCHAR DEFAULT NULL,
+                    reddit VARCHAR DEFAULT NULL,
+                    youtube VARCHAR DEFAULT NULL
                   );
 
 CREATE TABLE sessions(
@@ -36,7 +42,7 @@ CREATE TABLE questions(
                     question VARCHAR NOT NULL,
                     choice_test BOOLEAN NOT NULL,
                     shareable BOOLEAN NOT NULL,
-                    created TIMESTAMP,
+                    created TIMESTAMP NOT NULL,
                     last_edited TIMESTAMP,
                     FOREIGN KEY (owner) REFERENCES users(id),
                     FOREIGN KEY (subject) REFERENCES subjects(id)
@@ -47,7 +53,7 @@ CREATE TABLE answers(
                     question_id BIGINT NOT NULL,
                     answer VARCHAR NOT NULL,
                     correct BOOLEAN NOT NULL,
-                    created TIMESTAMP,
+                    created TIMESTAMP NOT NULL,
                     last_edited TIMESTAMP,
                     FOREIGN KEY (question_id) REFERENCES questions(id)
                   );

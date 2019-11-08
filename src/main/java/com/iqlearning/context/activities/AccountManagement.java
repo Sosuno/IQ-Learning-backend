@@ -73,8 +73,6 @@ public class AccountManagement {
     }
 
     public void logout(String sessionId){
-        //user = service.getUserByUsername(username);
-        //changeStatus(0);
         sessionService.deleteSession(sessionId);
     }
 
@@ -108,7 +106,26 @@ public class AccountManagement {
         return loggedUser;
     }
 
-    public LoggedUser register(String username,String password, String email) {
-        return register(username,password,email,"","");
+    public LoggedUser changePassword(String session, String newPassword) {
+        user = service.getUserBySession(session);
+        user.setPassword(newPassword);
+        return new LoggedUser(service.saveUser(user), session);
     }
+
+    public LoggedUser updateUser(LoggedUser loggedUser){
+        user = service.getUserBySession(loggedUser.getSessionID());
+        if(!user.getName().equals(loggedUser.getName()) && loggedUser.getName() != null) user.setName(loggedUser.getName());
+        if(!user.getSurname().equals(loggedUser.getSurname())&& loggedUser.getSurname() != null) user.setSurname(loggedUser.getSurname());
+        if(!user.getEmail().equals(loggedUser.getEmail())&& loggedUser.getEmail() != null) user.setEmail(loggedUser.getEmail());
+        if(!user.getAvatar().equals(loggedUser.getAvatar())&& loggedUser.getAvatar() != null) user.setAvatar(loggedUser.getAvatar());
+        if(!user.getBio().equals(loggedUser.getBio())&& loggedUser.getBio() != null) user.setBio(loggedUser.getBio());
+        if(!user.getLinkedIn().equals(loggedUser.getLinkedIn())&& loggedUser.getLinkedIn() != null) user.setLinkedIn(loggedUser.getLinkedIn());
+        if(!user.getTwitter().equals(loggedUser.getTwitter())&& loggedUser.getTwitter() != null)user.setTwitter(loggedUser.getTwitter());
+        if(!user.getReddit().equals(loggedUser.getReddit())&& loggedUser.getReddit() != null)user.setReddit(loggedUser.getReddit());
+        if(!user.getYoutube().equals(loggedUser.getYoutube())&& loggedUser.getYoutube() != null)user.setYoutube(loggedUser.getYoutube());
+
+        return new LoggedUser(service.saveUser(user), loggedUser.getSessionID());
+    }
+
+
 }
