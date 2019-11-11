@@ -6,11 +6,20 @@ import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.interfaces.ISessionService;
 import com.iqlearning.database.service.interfaces.IUserService;
 import com.iqlearning.rest.resource.LoginForm;
+import com.iqlearning.rest.resource.UserForm;
+import com.iqlearning.rest.resource.PasswordForm;
 import com.iqlearning.rest.resource.RegisterForm;
 import com.iqlearning.rest.resource.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -18,7 +27,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins=("http://localhost:3000"))
-public class APIController {
+public class UserController {
 
     @Autowired
     private IUserService userService;
@@ -55,12 +64,12 @@ public class APIController {
 
     @DeleteMapping("/user/logout")
     public ResponseEntity<?> logoutUser(@RequestHeader Map<String, String> headers) {
-        String session = headers.get("authorization").split(" ")[1];
+        String token = headers.get("authorization").split(" ")[1];
         acc = new AccountManagement(userService,sessionService);
-        User u = userService.getUserBySession(session);
-        if (u.getId() == -1L) return new ResponseEntity<>("No such session in database",HttpStatus.UNAUTHORIZED);
-        acc.logout(session);
-        if(sessionService.getSession(session) != null) {
+        User u = userService.getUserBySession(token);
+        if (u.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+        acc.logout(token);
+        if(sessionService.getSession(token) != null) {
             return new ResponseEntity<>( "Logout unsuccessful", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>( "Logout successful", HttpStatus.OK);
     }
@@ -74,8 +83,31 @@ public class APIController {
             return auth(loggedUser.getSessionID(),loggedUser);
         } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("Session expired");
+    }
 
+    @PostMapping("/user/name")
+    public ResponseEntity<?> editNameAndSurname(@RequestHeader Map<String, String> headers, @RequestBody UserForm userForm) {
+        String token = headers.get("authorization").split(" ")[1];
+        User user = userService.getUserBySession(token);
+        if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+        else {
+            if(userForm.getName() != null) user.setName(userForm.getName());
+            if(userForm.getSurname() != null) user.setSurname(userForm.getSurname());
+            return new ResponseEntity<>( userService.saveUser(user), HttpStatus.OK);
+        }
+    }
 
+    @PostMapping("/user/password")
+    public ResponseEntity<?> editPassword(@RequestHeader Map<String, String> headers, @RequestBody PasswordForm passwordForm) {
+        String token = headers.get("authorization").split(" ")[1];
+        User user = userService.getUserBySession(token);
+        if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+        else if(!passwordForm.getCurrentPass().equals(user.getPassword())) {
+            return new ResponseEntity<>("Current password doesn't match" + user.getPassword(), HttpStatus.BAD_REQUEST);
+        } else {
+            user.setPassword(passwordForm.getNewPass());
+            return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
+        }
     }
 
     private ResponseEntity<?> auth(String session, Object o) {

@@ -46,7 +46,7 @@ public class User{
     private String avatar;
     @Column(name = "bio")
     private String bio;
-    @Column(name = "linkedId")
+    @Column(name = "linkedin")
     private String linkedIn;
     @Column(name = "twitter")
     private String twitter;

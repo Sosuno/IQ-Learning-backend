@@ -44,6 +44,8 @@ public class QuestionsManagement {
             List<Answer> answers = q.getAnswers();
             for(Answer a: answers){
                 a.setQuestion_id(toDbQ.getId());
+                a.setCreated(new Timestamp(System.currentTimeMillis()));
+                a.setLastEdited(new Timestamp(System.currentTimeMillis()));
                 answerService.saveAnswer(a);
             }
         }

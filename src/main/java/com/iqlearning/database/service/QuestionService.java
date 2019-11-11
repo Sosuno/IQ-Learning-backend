@@ -8,11 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class QuestionService implements IQuestionService {
 
     @Autowired
     private QuestionRepository repo;
+
+    @Override
+    public Question get(Long questionId) {
+        Optional<Question> o = repo.findById(questionId);
+        if (o.isPresent()) return o.get();
+        return null;
+    }
 
     @Override
     public List<Question> getAllUserQuestions(Long userId) {
