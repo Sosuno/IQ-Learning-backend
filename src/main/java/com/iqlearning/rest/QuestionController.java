@@ -50,13 +50,14 @@ public class QuestionController {
         que = new QuestionsManagement(questionService, answerService, subjectService);
         if(filledQuestion.getSubject() == null || filledQuestion.getQuestion() == null
                 || (filledQuestion.isChoiceTest() && filledQuestion.getAnswers() == null)) {
-            return new ResponseEntity<>(filledQuestion, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Fill all required fields" + filledQuestion, HttpStatus.BAD_REQUEST);
         }
         Question addedQuestion = que.addQuestion(filledQuestion);
-        if(addedQuestion != null) {
-            return new ResponseEntity<>(addedQuestion, HttpStatus.OK);
-        } else return new ResponseEntity<>(filledQuestion, HttpStatus.BAD_REQUEST);
+        if(addedQuestion == null) {
+            return new ResponseEntity<>("Added question is empty", HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>(filledQuestion, HttpStatus.OK);
     }
+
     @DeleteMapping("/question/delete/{id}")
     public ResponseEntity<?> deleteQuestion(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
@@ -76,6 +77,7 @@ public class QuestionController {
             return new ResponseEntity<>( "Question deleted", HttpStatus.OK);
         }
     }
+
     @PostMapping("/question/update")
     public ResponseEntity<?> updateQuestion(@RequestHeader Map<String, String> headers, @RequestBody FilledQuestion filledQuestion) {
         String session = headers.get("authorization").split(" ")[1];
@@ -86,7 +88,7 @@ public class QuestionController {
         if(filledQuestion.getOwner() == null) return new ResponseEntity<>("Owner id is null", HttpStatus.BAD_REQUEST);
         if(filledQuestion.getSubject() == null || filledQuestion.getQuestion() == null
                 || (filledQuestion.isChoiceTest() && filledQuestion.getAnswers() == null)) {
-            return new ResponseEntity<>(filledQuestion, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Fill all required fields" + filledQuestion, HttpStatus.BAD_REQUEST);
         }
         if(filledQuestion.isChoiceTest()) {
             for(Answer a : filledQuestion.getAnswers()) {
@@ -104,10 +106,11 @@ public class QuestionController {
         }
         FilledQuestion updatedQuestion = que.getReadyQuestion(que.addQuestion(filledQuestion));
         if(updatedQuestion == null) {
-            return new ResponseEntity<>(filledQuestion, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Update unsuccessful", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>(filledQuestion, HttpStatus.OK);
     }
-    @GetMapping("/question/get/user")
+
+    @GetMapping("/questions/get/user")
     public ResponseEntity<?> getQuestionsByUser(@RequestHeader Map<String, String> headers){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
@@ -115,38 +118,29 @@ public class QuestionController {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Question> questionList = questionService.getAllUserQuestions(user.getId());
+        if(questionList.isEmpty()) {
+            return new ResponseEntity<>("Question list empty" , HttpStatus.OK);
+        }
         List<FilledQuestion> filledQuestionList = que.getReadyQuestions(questionList);
         if(filledQuestionList.isEmpty()) {
-            return new ResponseEntity<>("Question list empty" , HttpStatus.OK);
+            return new ResponseEntity<>("Ready question list empty" , HttpStatus.OK);
         } else return new ResponseEntity<>(filledQuestionList , HttpStatus.OK);
     }
-    @GetMapping("/question/get/date/{timestamp}")
-    public ResponseEntity<?> getQuestionsByUser(@RequestHeader Map<String, String> headers, @PathVariable Timestamp timestamp){
-        /*
-        todo
-         */
-        return new ResponseEntity<>("todo",HttpStatus.NOT_ACCEPTABLE);
-    }
-    @GetMapping("/question/get/subject/{id}")
+
+    @GetMapping("/questions/get/user/subject/{id}")
     public ResponseEntity<?> getQuestionsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
         if(sessionService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
-        List<Question> questionListReady = new ArrayList<>();
-        List<Question> questionList = questionService.getAllUserQuestions(user.getId());
-        for(Question q : questionList) {
-            if(q.getSubject() == id) {
-                questionListReady.add(q);
-            }
-        }
-        if(questionListReady.isEmpty()) {
-            return new ResponseEntity<>("Question list empty", HttpStatus.BAD_REQUEST);
-        }
-        List<FilledQuestion> filledQuestionList = que.getReadyQuestions(questionListReady);
-        return new ResponseEntity<>(filledQuestionList , HttpStatus.OK);
+        List<Question> questionList = questionService.getAllQuestionForSubjectOfUser(user.getId(),id);
+        if(questionList.isEmpty()) return new ResponseEntity<>("Question list empty", HttpStatus.BAD_REQUEST);
+        List<FilledQuestion> readyQuestionList = que.getReadyQuestions(questionList);
+        if(readyQuestionList.isEmpty()) return new ResponseEntity<>("Couldn't get ready questions", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
     }
+
     @GetMapping("/question/get/{id}")
     public ResponseEntity<?> getQuestionById(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
@@ -172,8 +166,9 @@ public class QuestionController {
         }
         Subject subject = subjectService.getSubject(id);
         if(subject == null) return new ResponseEntity<>("Subject not found", HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<>(subject , HttpStatus.OK);
+        else return new ResponseEntity<>(subject, HttpStatus.OK);
     }
+
     @GetMapping("/subject/get")
     public ResponseEntity<?> getAllSubjects(@RequestHeader Map<String, String> headers){
         String session = headers.get("authorization").split(" ")[1];
@@ -184,6 +179,7 @@ public class QuestionController {
         if(subjectList.isEmpty()) return new ResponseEntity<>("Subject list empty", HttpStatus.BAD_REQUEST);
         else return new ResponseEntity<>(subjectList , HttpStatus.OK);
     }
+
     @GetMapping("/answers/get/{id}")
     public ResponseEntity<?> getAnswersByQuestionId(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
@@ -198,6 +194,64 @@ public class QuestionController {
         List<Answer> answerList = answerService.getAnswers(question);
         if (answerList.isEmpty()) return new ResponseEntity<>("Answer list empty", HttpStatus.BAD_REQUEST);
         else return new ResponseEntity<>(answerList, HttpStatus.OK);
+    }
+
+    @GetMapping("/questions/get/public")
+    public ResponseEntity<?> getPublicQuestions(@RequestHeader Map<String, String> headers) {
+        String session = headers.get("authorization").split(" ")[1];
+        if(sessionService.getSession(session) == null) {
+            return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
+        }
+        List<Question> questionList = questionService.getAllSharedQuestions();
+        if (questionList.isEmpty()) return new ResponseEntity<>("Question list empty", HttpStatus.BAD_REQUEST);
+        List<FilledQuestion> readyQuestionList = que.getReadyQuestions(questionList);
+        if (readyQuestionList.isEmpty()) return new ResponseEntity<>("Couldn't get ready questions", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
+    }
+
+    @GetMapping("/questions/get/public/user")
+    public ResponseEntity<?> getPublicQuestionsByUser(@RequestHeader Map<String, String> headers) {
+        String session = headers.get("authorization").split(" ")[1];
+        if(sessionService.getSession(session) == null) {
+            return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
+        }
+        User user = userService.getUserBySession(session);
+        List<Question> questionList = questionService.getAllSharedQuestionsByUser(user.getId());
+        if (questionList.isEmpty()) return new ResponseEntity<>("Question list empty", HttpStatus.BAD_REQUEST);
+        List<FilledQuestion> readyQuestionList = que.getReadyQuestions(questionList);
+        if (readyQuestionList.isEmpty()) return new ResponseEntity<>("Couldn't get ready questions", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
+    }
+
+    @GetMapping("/questions/get/public/subject/{id}")
+    public ResponseEntity<?> getPublicQuestionsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
+        String session = headers.get("authorization").split(" ")[1];
+        if(sessionService.getSession(session) == null) {
+            return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
+        }
+        Subject subject = subjectService.getSubject(id);
+        if(subject.getId() == null) return new ResponseEntity<>("Invalid subject", HttpStatus.BAD_REQUEST);
+        List<Question> questionList = questionService.getAllSharedQuestionsForSubject(id);
+        if (questionList.isEmpty()) return new ResponseEntity<>("Question list empty", HttpStatus.BAD_REQUEST);
+        List<FilledQuestion> readyQuestionList = que.getReadyQuestions(questionList);
+        if (readyQuestionList.isEmpty()) return new ResponseEntity<>("Couldn't get ready questions", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
+    }
+
+    @GetMapping("/questions/get/public/user/subject")
+    public ResponseEntity<?> getPublicQuestionsByUserAndSubject(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
+        String session = headers.get("authorization").split(" ")[1];
+        if(sessionService.getSession(session) == null) {
+            return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
+        }
+        User user = userService.getUserBySession(session);
+        Subject subject = subjectService.getSubject(id);
+        if(subject.getId() == null) return new ResponseEntity<>("Invalid subject", HttpStatus.BAD_REQUEST);
+        List<Question> questionList = questionService.getAllShareableOfUserBySubject(user.getId(),id);
+        if (questionList.isEmpty()) return new ResponseEntity<>("Question list empty", HttpStatus.BAD_REQUEST);
+        List<FilledQuestion> readyQuestionList = que.getReadyQuestions(questionList);
+        if (readyQuestionList.isEmpty()) return new ResponseEntity<>("Couldn't get ready questions", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
     }
 
 }
