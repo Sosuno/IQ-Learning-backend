@@ -238,7 +238,7 @@ public class QuestionController {
         return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
     }
 
-    @GetMapping("/questions/get/public/user/subject")
+    @GetMapping("/questions/get/public/user/subject/{id}")
     public ResponseEntity<?> getPublicQuestionsByUserAndSubject(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
         if(sessionService.getSession(session) == null) {
