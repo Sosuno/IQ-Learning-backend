@@ -46,7 +46,7 @@ public class AccountManagement {
         user = service.getUserByUsername(username);
         if(user.getId() == -1) return null;
         if(user.getLoginTries() < 3) {
-            if(!hash.customPasswordEncoder().matches(password,user.getPassword())){
+            if(!hash.passwordEncoder().matches(password,user.getPassword())){
                 user.setLoginTries(user.getLoginTries()+1);
                 if(user.getLoginTries() == 3) user.setStatus(1);
                 service.saveUser(user);
@@ -101,7 +101,7 @@ public class AccountManagement {
             loggedUser.setId((long) -2);
             return loggedUser;
         }
-        user = new User(name,surname,username,hash.customPasswordEncoder().encode(password),email,2, new Timestamp(System.currentTimeMillis()), 0);
+        user = new User(name,surname,username,hash.passwordEncoder().encode(password),email,2, new Timestamp(System.currentTimeMillis()), 0);
         user = service.saveUser(user);
         s = sessionService.createSession(user.getId());
         loggedUser = new LoggedUser(user,s.getSessionID());
@@ -111,7 +111,7 @@ public class AccountManagement {
 
     public LoggedUser changePassword(String session, String newPassword) {
         user = service.getUserBySession(session);
-        user.setPassword(hash.customPasswordEncoder().encode(newPassword));
+        user.setPassword(hash.passwordEncoder().encode(newPassword));
         return new LoggedUser(service.saveUser(user), session);
     }
 
@@ -134,7 +134,7 @@ public class AccountManagement {
     private void init(){
         List<User> l = service.getAllUsers();
         for (User u : l){
-            u.setPassword(hash.customPasswordEncoder().encode(u.getPassword()));
+            u.setPassword(hash.passwordEncoder().encode(u.getPassword()));
             service.saveUser(u);
         }
     }

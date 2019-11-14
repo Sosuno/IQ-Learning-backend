@@ -57,3 +57,24 @@ CREATE TABLE answers(
                     last_edited TIMESTAMP,
                     FOREIGN KEY (question_id) REFERENCES questions(id)
                   );
+
+CREATE TABLE tests(
+                  id SERIAL PRIMARY KEY,
+                  owner BIGINT NOT NULL,
+                  subject BIGINT NOT NULL,
+                  questions BIGINT ARRAY,
+                  shareable BOOLEAN NOT NULL,
+                  created TIMESTAMP NOT NULL DEFAULT now(),
+                  last_edited TIMESTAMP DEFAULT now(),
+                  downloads INT DEFAULT 0,
+                  FOREIGN KEY (owner) REFERENCES users(id),
+                  FOREIGN KEY (subject) REFERENCES subjects(id)
+);
+
+CREATE TABLE tests_results(
+              id SERIAL PRIMARY KEY,
+              test_id BIGINT NOT NULL,
+              question_id BIGINT NOT NULL,
+              FOREIGN KEY (question_id) REFERENCES questions(id),
+              FOREIGN KEY (test_id) REFERENCES tests(id)
+)
