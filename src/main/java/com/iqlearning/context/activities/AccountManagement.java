@@ -1,6 +1,7 @@
 package com.iqlearning.context.activities;
 
 import com.iqlearning.context.objects.LoggedUser;
+import com.iqlearning.context.security.PasswordEncoderConfig;
 import com.iqlearning.database.entities.Session;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.interfaces.ISessionService;
@@ -8,11 +9,11 @@ import com.iqlearning.database.service.interfaces.IUserService;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
-
+import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Component
 @Configurable
@@ -23,11 +24,13 @@ public class AccountManagement {
     private User user;
     private Session s;
     private LoggedUser loggedUser;
+    private PasswordEncoderConfig hash;
 
     @Autowired
     public AccountManagement(IUserService service, ISessionService sessionService) {
         this.service = service;
         this.sessionService = sessionService;
+        hash = new PasswordEncoderConfig();
     }
 
     /****
@@ -43,7 +46,7 @@ public class AccountManagement {
         user = service.getUserByUsername(username);
         if(user.getId() == -1) return null;
         if(user.getLoginTries() < 3) {
-            if(!user.getPassword().equals(password)){
+            if(!hash.customPasswordEncoder().matches(password,user.getPassword())){
                 user.setLoginTries(user.getLoginTries()+1);
                 if(user.getLoginTries() == 3) user.setStatus(1);
                 service.saveUser(user);
@@ -98,7 +101,7 @@ public class AccountManagement {
             loggedUser.setId((long) -2);
             return loggedUser;
         }
-        user = new User(name,surname,username,password,email,2, new Timestamp(System.currentTimeMillis()), 0);
+        user = new User(name,surname,username,hash.customPasswordEncoder().encode(password),email,2, new Timestamp(System.currentTimeMillis()), 0);
         user = service.saveUser(user);
         s = sessionService.createSession(user.getId());
         loggedUser = new LoggedUser(user,s.getSessionID());
@@ -108,7 +111,7 @@ public class AccountManagement {
 
     public LoggedUser changePassword(String session, String newPassword) {
         user = service.getUserBySession(session);
-        user.setPassword(newPassword);
+        user.setPassword(hash.customPasswordEncoder().encode(newPassword));
         return new LoggedUser(service.saveUser(user), session);
     }
 
@@ -127,5 +130,12 @@ public class AccountManagement {
         return new LoggedUser(service.saveUser(user), loggedUser.getSessionID());
     }
 
-
+    @PostConstruct
+    private void init(){
+        List<User> l = service.getAllUsers();
+        for (User u : l){
+            u.setPassword(hash.customPasswordEncoder().encode(u.getPassword()));
+            service.saveUser(u);
+        }
+    }
 }
