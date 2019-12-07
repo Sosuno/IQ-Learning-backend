@@ -55,7 +55,7 @@ public class QuestionController {
         Question addedQuestion = que.addQuestion(filledQuestion);
         if(addedQuestion == null) {
             return new ResponseEntity<>("Added question is empty", HttpStatus.BAD_REQUEST);
-        } else return new ResponseEntity<>(filledQuestion, HttpStatus.OK);
+        } else return new ResponseEntity<>(addedQuestion, HttpStatus.OK);
     }
 
     @DeleteMapping("/question/delete/{id}")
