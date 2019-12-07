@@ -5,6 +5,7 @@ import com.iqlearning.database.entities.Answer;
 import com.iqlearning.database.entities.Question;
 import com.iqlearning.database.entities.Subject;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class FilledQuestion {
@@ -15,7 +16,11 @@ public class FilledQuestion {
     private String question;
     private boolean choiceTest;
     private boolean shareable;
+    private Timestamp created;
+    private Timestamp lastEdited;
     private List<Answer> answers;
+
+
 
     public FilledQuestion(){
 
@@ -27,7 +32,26 @@ public class FilledQuestion {
         question = q.getQuestion();
         choiceTest = q.isChoice_test();
         shareable = q.isShareable();
+        created = q.getCreated();
+        lastEdited = q.getLastEdited();
     }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
+    public Timestamp getLastEdited() {
+        return lastEdited;
+    }
+
+    public void setLastEdited(Timestamp lastEdited) {
+        this.lastEdited = lastEdited;
+    }
+
 
     public Long getId() {
         return id;

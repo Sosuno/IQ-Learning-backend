@@ -31,7 +31,7 @@ public class QuestionsManagement {
     }
 
     public Question addQuestion(FilledQuestion q) {
-        Question toDbQ = new Question(q.getOwner(),q.getSubject().getId(),q.getQuestion(),q.isChoiceTest(),q.isShareable());
+        Question toDbQ = new Question(q.getOwner(),q.getSubject().getId(),q.getQuestion(),q.isChoiceTest(),q.isShareable(), q.getCreated(), q.getLastEdited());
         toDbQ.setLastEdited(new Timestamp(System.currentTimeMillis()));
         if(q.getId() != null) {
             toDbQ.setId(q.getId());
@@ -41,6 +41,9 @@ public class QuestionsManagement {
         toDbQ = questionService.saveQuestion(toDbQ);
 
         if(q.isChoiceTest()){
+            if(q.getId() != null) {
+                answerService.deleteAnswers(q.getId());
+            }
             List<Answer> answers = q.getAnswers();
             for(Answer a: answers){
                 a.setQuestion_id(toDbQ.getId());
