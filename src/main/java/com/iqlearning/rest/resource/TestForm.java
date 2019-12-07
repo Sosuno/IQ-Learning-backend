@@ -4,7 +4,7 @@ public class TestForm {
 
     private Long id;
     private Boolean shareable;
-    private Long subject;
+    private Long subjectId;
     private Long[] questions;
 
     public Long getId() {
@@ -24,11 +24,11 @@ public class TestForm {
     }
 
     public Long getSubjectId() {
-        return subject;
+        return subjectId;
     }
 
     public void setSubjectId(Long subjectId) {
-        this.subject = subjectId;
+        this.subjectId = subjectId;
     }
 
     public Long[] getQuestions() {
