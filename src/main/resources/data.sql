@@ -5,8 +5,6 @@ INSERT INTO users(name, surname, username, password,email,status,creation_time,l
   ('Garrus','Vakarian','Archangel','calibrate','vakarian@normandy.com',0,now(),0),
   ('Gosia','Z','FochMaiden','qweqwe123','gosia.xq@gmail.com',5,now(),0);
 
-
-
 INSERT INTO sessions VALUES
   ('1234-1234-1234-1234',1,now());
 
