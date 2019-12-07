@@ -13,8 +13,4 @@ public interface TestRepository extends CrudRepository<Test,Long> {
     List<Test> getAllByOwnerOrderByLastEditedDesc(Long id);
     List<Test> getAllBySubjectAndShareableOrderByLastEditedDesc(Long subjectId, boolean share);
     List<Test> getAllByShareableOrderByLastEdited(boolean share);
-
-
-
-
 }
