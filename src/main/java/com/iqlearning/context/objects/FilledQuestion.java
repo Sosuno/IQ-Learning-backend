@@ -1,6 +1,5 @@
 package com.iqlearning.context.objects;
 
-
 import com.iqlearning.database.entities.Answer;
 import com.iqlearning.database.entities.Question;
 import com.iqlearning.database.entities.Subject;
@@ -19,8 +18,6 @@ public class FilledQuestion {
     private Timestamp created;
     private Timestamp lastEdited;
     private List<Answer> answers;
-
-
 
     public FilledQuestion(){
 
@@ -51,7 +48,6 @@ public class FilledQuestion {
     public void setLastEdited(Timestamp lastEdited) {
         this.lastEdited = lastEdited;
     }
-
 
     public Long getId() {
         return id;
@@ -108,5 +104,4 @@ public class FilledQuestion {
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
-
 }
