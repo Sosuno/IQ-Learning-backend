@@ -1,6 +1,8 @@
 package com.iqlearning.database.entities;
 
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -16,6 +18,7 @@ public class Test {
     @Column(name = "subject")
     private Long subject;
     @Column(name = "questions")
+    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
     private Long[] questions;
     @Column(name = "shareable")
     private boolean shareable;
