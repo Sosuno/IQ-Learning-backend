@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TestService implements ITestService{
@@ -14,6 +15,12 @@ public class TestService implements ITestService{
     @Autowired
     TestRepository repo;
 
+    @Override
+    public Test getTest(Long id) {
+        Optional<Test> o = repo.findById(id);
+        if (o.isPresent()) return o.get();
+        return null;
+    }
 
     @Override
     public List<Test> getTestsByUserAndSubject(Long userId, Long subjectId) {

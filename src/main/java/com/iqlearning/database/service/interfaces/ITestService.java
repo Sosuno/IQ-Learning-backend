@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface ITestService {
 
+    Test getTest(Long id);
     List<Test> getTestsByUserAndSubject(Long userId, Long subjectId);
     List<Test> getTestsByUser(Long id);
     List<Test> getSharedTestsBySubject(Long subjectId);
