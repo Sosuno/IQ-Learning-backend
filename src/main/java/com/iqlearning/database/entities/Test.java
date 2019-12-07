@@ -1,11 +1,13 @@
 package com.iqlearning.database.entities;
 
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "test")
+@Table(name = "tests")
 public class Test {
 
     @Id
@@ -16,6 +18,7 @@ public class Test {
     @Column(name = "subject")
     private Long subject;
     @Column(name = "questions")
+    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
     private Long[] questions;
     @Column(name = "shareable")
     private boolean shareable;
@@ -32,6 +35,16 @@ public class Test {
         this.questions = questions;
         this.shareable = shareable;
         this.downloads = downloads;
+    }
+
+    public Test(Long owner, Long subject, Long[] questions, boolean shareable, int downloads, Timestamp created, Timestamp lastEdited) {
+        this.owner = owner;
+        this.subject = subject;
+        this.questions = questions;
+        this.shareable = shareable;
+        this.downloads = downloads;
+        this.created = created;
+        this.lastEdited = lastEdited;
     }
 
     public Test() {

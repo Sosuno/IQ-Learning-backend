@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS tests_results CASCADE;
 DROP TABLE IF EXISTS tests CASCADE;
 DROP TABLE IF EXISTS answers CASCADE;
@@ -67,7 +66,7 @@ CREATE TABLE tests(
                   subject BIGINT NOT NULL,
                   questions BIGINT ARRAY,
                   shareable BOOLEAN NOT NULL,
-                  created TIMESTAMP NOT NULL DEFAULT now(),
+                  created TIMESTAMP DEFAULT now(),
                   last_edited TIMESTAMP DEFAULT now(),
                   downloads INT DEFAULT 0,
                   FOREIGN KEY (owner) REFERENCES users(id),
