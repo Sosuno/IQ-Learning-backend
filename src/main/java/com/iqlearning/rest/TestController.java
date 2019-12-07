@@ -49,7 +49,6 @@ public class TestController {
         if(addedTest != null) {
             return new ResponseEntity<>(addedTest, HttpStatus.OK);
         } else return new ResponseEntity<>("Saving test failed", HttpStatus.INTERNAL_SERVER_ERROR);
-
     }
 
     @DeleteMapping("/test/delete/{id}")
@@ -100,7 +99,6 @@ public class TestController {
         if(savedTest != null) {
             return new ResponseEntity<>(savedTest, HttpStatus.OK);
         } else return new ResponseEntity<>("Saving test failed", HttpStatus.INTERNAL_SERVER_ERROR);
-
     }
 
     @GetMapping("/tests/get/user")
@@ -155,7 +153,6 @@ public class TestController {
         else return new ResponseEntity<>(testList, HttpStatus.OK);
     }
 
-
     @GetMapping("/tests/get/public/subject/{id}")
     public ResponseEntity<?> getPublicQuestionsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
@@ -168,5 +165,4 @@ public class TestController {
         if (testList.isEmpty()) return new ResponseEntity<>("No shared tests available", HttpStatus.BAD_REQUEST);
         else return new ResponseEntity<>(testList, HttpStatus.OK);
     }
-
 }
