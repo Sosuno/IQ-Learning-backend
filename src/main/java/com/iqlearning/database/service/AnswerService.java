@@ -6,6 +6,7 @@ import com.iqlearning.database.repository.AnswerRepository;
 import com.iqlearning.database.service.interfaces.IAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +57,7 @@ public class AnswerService implements IAnswerService {
     }
 
     @Override
+    @Transactional
     public void deleteAnswers(Long id) {
         repo.deleteAllByQuestionId(id);
     }

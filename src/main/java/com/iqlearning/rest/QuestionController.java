@@ -80,6 +80,7 @@ public class QuestionController {
     public ResponseEntity<?> updateQuestion(@RequestHeader Map<String, String> headers, @RequestBody FilledQuestion filledQuestion) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
+        que = new QuestionsManagement(questionService, answerService, subjectService);
         Boolean isTrue = false;
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         if(filledQuestion.getId() == null) return new ResponseEntity<>("Question id is null", HttpStatus.BAD_REQUEST);
