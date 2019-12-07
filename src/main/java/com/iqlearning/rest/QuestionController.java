@@ -83,7 +83,6 @@ public class QuestionController {
         Boolean isTrue = false;
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         if(filledQuestion.getId() == null) return new ResponseEntity<>("Question id is null", HttpStatus.BAD_REQUEST);
-        if(filledQuestion.getOwner() == null) return new ResponseEntity<>("Owner id is null", HttpStatus.BAD_REQUEST);
         if(filledQuestion.getSubject() == null || filledQuestion.getQuestion() == null
                 || (filledQuestion.isChoiceTest() && filledQuestion.getAnswers() == null)) {
             return new ResponseEntity<>("Fill all required fields" + filledQuestion, HttpStatus.BAD_REQUEST);
@@ -99,13 +98,14 @@ public class QuestionController {
         if(questionToUpdate == null) {
             return new ResponseEntity<>("Question not found", HttpStatus.BAD_REQUEST);
         }
-        if(filledQuestion.getOwner() != user.getId()) {
+        if(questionToUpdate.getOwner() != user.getId()) {
             return new ResponseEntity<>("Owner id does not match logged user id", HttpStatus.BAD_REQUEST);
-        }
+        } else if(filledQuestion.getOwner() == null) filledQuestion.setOwner(user.getId());
+        if(filledQuestion.getCreated() == null) filledQuestion.setCreated(questionToUpdate.getCreated());
         FilledQuestion updatedQuestion = que.getReadyQuestion(que.addQuestion(filledQuestion));
         if(updatedQuestion == null) {
             return new ResponseEntity<>("Update unsuccessful", HttpStatus.BAD_REQUEST);
-        } else return new ResponseEntity<>(filledQuestion, HttpStatus.OK);
+        } else return new ResponseEntity<>(updatedQuestion, HttpStatus.OK);
     }
 
     @GetMapping("/questions/get/user")
