@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class TestController {
                 return new ResponseEntity<>("Question " + id + " is not of the same subject as test", HttpStatus.BAD_REQUEST);
             }
         }
-        Test newTest = new Test(user.getId(), testForm.getSubjectId(), questionList, testForm.getShareable(), 0 );
+        Test newTest = new Test(user.getId(), testForm.getSubjectId(), questionList, testForm.getShareable(), 0, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
         Test addedTest = testService.saveTest(newTest);
         if(addedTest != null) {
             return new ResponseEntity<>(addedTest, HttpStatus.OK);
@@ -64,7 +65,7 @@ public class TestController {
         } else {
             testService.deleteTest(testToDelete);
             if(testService.getTest(id) == null)
-                return new ResponseEntity<>( "Question deleted", HttpStatus.OK);
+                return new ResponseEntity<>( "Test deleted", HttpStatus.OK);
             else return new ResponseEntity<>( "Database error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -76,21 +77,25 @@ public class TestController {
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         if(testForm.getQuestions().length == 0) return new ResponseEntity<>("Empty question list", HttpStatus.BAD_REQUEST);
         Long testId = testForm.getId();
-        if(testService.getTest(testId) == null) return new ResponseEntity<>("Test you're trying to edit doesn't exist", HttpStatus.BAD_REQUEST);
-        if(testService.getTest(testId).getOwner() == user.getId()) return new ResponseEntity<>("You're not the owner of the test you're trying to edit", HttpStatus.UNAUTHORIZED);
+        if(testService.getTest(testId) == null) return new ResponseEntity<>("Please specify valid test id", HttpStatus.BAD_REQUEST);
+        if(testService.getTest(testId).getOwner() != user.getId()) return new ResponseEntity<>("You're not the owner of the test you're trying to edit", HttpStatus.UNAUTHORIZED);
         Long[] questionList = testForm.getQuestions();
-        for(Long id : questionList) {
-            if (questionService.get(id) == null) {
-                return new ResponseEntity<>("Question " + id + " not found", HttpStatus.BAD_REQUEST);
-            } else if (questionService.get(id).getOwner() != user.getId() && !questionService.get(id).isShareable()) {
-                return new ResponseEntity<>("Question " + id + " is not shareable and is not owned by you", HttpStatus.BAD_REQUEST);
-            } else if (questionService.get(id).getSubject() != testForm.getSubjectId()) {
-                return new ResponseEntity<>("Question " + id + " is not of the same subject as test", HttpStatus.BAD_REQUEST);
-            }
-        }
         Test editedTest = testService.getTest(testId);
+        if(testForm.getSubjectId() != null) editedTest.setSubject(testForm.getSubjectId());
+        for(Long id : questionList) {
+                if (questionService.get(id) == null) {
+                    return new ResponseEntity<>("Question " + id + " not found", HttpStatus.BAD_REQUEST);
+                } else if (questionService.get(id).getOwner() != user.getId() && !questionService.get(id).isShareable()) {
+                    return new ResponseEntity<>("Question " + id + " is not shareable and is not owned by you", HttpStatus.BAD_REQUEST);
+                } else if (questionService.get(id).getSubject() != editedTest.getSubject()) {
+                    return new ResponseEntity<>("Question " + id + " is not of the same subject as test", HttpStatus.BAD_REQUEST);
+                }
+        }
         editedTest.setQuestions(questionList);
-        editedTest.setShareable(testForm.getShareable());
+        if(editedTest.isShareable() != testForm.getShareable()) {
+            editedTest.setShareable(testForm.getShareable());
+        }
+        editedTest.setLastEdited(new Timestamp(System.currentTimeMillis()));
         Test savedTest = testService.saveTest(editedTest);
         if(savedTest != null) {
             return new ResponseEntity<>(savedTest, HttpStatus.OK);
@@ -135,7 +140,7 @@ public class TestController {
 
         Test test = testService.getTest(id);
         if(test == null) return new ResponseEntity<>("Test not found", HttpStatus.BAD_REQUEST);
-        if(test.getOwner() == user.getId()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
+        if(test.getOwner() != user.getId()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(test, HttpStatus.OK);
     }
 

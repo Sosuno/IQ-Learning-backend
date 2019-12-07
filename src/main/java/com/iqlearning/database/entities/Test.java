@@ -37,6 +37,16 @@ public class Test {
         this.downloads = downloads;
     }
 
+    public Test(Long owner, Long subject, Long[] questions, boolean shareable, int downloads, Timestamp created, Timestamp lastEdited) {
+        this.owner = owner;
+        this.subject = subject;
+        this.questions = questions;
+        this.shareable = shareable;
+        this.downloads = downloads;
+        this.created = created;
+        this.lastEdited = lastEdited;
+    }
+
     public Test() {
 
     }

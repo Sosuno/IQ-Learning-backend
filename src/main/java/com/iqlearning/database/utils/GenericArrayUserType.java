@@ -5,7 +5,7 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
 
 import java.io.Serializable;
-import java.sql.*;sa
+import java.sql.*;
 
 public class GenericArrayUserType<T extends Serializable> implements UserType {
     protected static final int[] SQL_TYPES = {Types.ARRAY};
