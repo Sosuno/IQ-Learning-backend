@@ -36,7 +36,6 @@ public class LoggedUser {
         this.youtube = user.getYoutube();
     }
 
-
     public Long getId() {
         return id;
     }
@@ -132,6 +131,4 @@ public class LoggedUser {
     public void setYoutube(String youtube) {
         this.youtube = youtube;
     }
-
-
 }
