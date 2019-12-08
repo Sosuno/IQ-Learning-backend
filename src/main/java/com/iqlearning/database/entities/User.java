@@ -56,12 +56,8 @@ public class User{
     private String reddit;
     @Column(name = "youtube")
     private String youtube;
-    @Column(name = "comments_upvotes")
-    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
-    private Long[] commentsUpvotes;
-    @Column(name = "articles_upvotes")
-    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
-    private Long[] articlesUpvotes;
+
+
 
     public User() {
     }

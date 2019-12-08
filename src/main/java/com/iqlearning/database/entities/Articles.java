@@ -1,5 +1,7 @@
 package com.iqlearning.database.entities;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -18,8 +20,23 @@ public class Articles {
     private int upvotes;
     @Column(name = "created_on")
     private Timestamp createdOn;
+    @Column(name = "upvoted_by")
+    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
+    private Long[] upvotedBy;
+    @Column(name = "tags")
+    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
+    private Long[] tags;
 
     public Articles() {}
+
+    public Articles(Long owner, String content, int upvotes, Timestamp createdOn, Long[] upvotedBy, Long[] tags) {
+        this.owner = owner;
+        this.content = content;
+        this.upvotes = upvotes;
+        this.createdOn = createdOn;
+        this.upvotedBy = upvotedBy;
+        this.tags = tags;
+    }
 
     public Articles(Long owner, String content, int upvotes, Timestamp createdOn) {
         this.owner = owner;
@@ -66,5 +83,21 @@ public class Articles {
 
     public void setCreatedOn(Timestamp createdOn) {
         this.createdOn = createdOn;
+    }
+
+    public Long[] getUpvotedBy() {
+        return upvotedBy;
+    }
+
+    public void setUpvotedBy(Long[] upvotedBy) {
+        this.upvotedBy = upvotedBy;
+    }
+
+    public Long[] getTags() {
+        return tags;
+    }
+
+    public void setTags(Long[] tags) {
+        this.tags = tags;
     }
 }

@@ -25,9 +25,7 @@ CREATE TABLE users(
                     linkedIn VARCHAR DEFAULT NULL,
                     twitter VARCHAR DEFAULT NULL,
                     reddit VARCHAR DEFAULT NULL,
-                    youtube VARCHAR DEFAULT NULL,
-                    comments_upvotes BIGINT ARRAY,
-                    articles_upvotes BIGINT ARRAY
+                    youtube VARCHAR DEFAULT NULL
                   );
 
 CREATE TABLE sessions(
@@ -110,6 +108,7 @@ CREATE TABLE articles(
             contents TEXT NOT NULL,
             upvotes INT DEFAULT 0,
             created_on TIMESTAMP DEFAULT now(),
+            upvoted_by BIGINT ARRAY DEFAULT null,
             tags BIGINT ARRAY DEFAULT null,
             FOREIGN KEY (owner) REFERENCES users(id)
 );
@@ -121,6 +120,7 @@ CREATE TABLE articles_comments(
             comment TEXT NOT NULL,
             upvotes INT DEFAULT 0,
             created_on TIMESTAMP DEFAULT now(),
+            upvoted_by BIGINT ARRAY DEFAULT null,
             FOREIGN KEY (article_id) REFERENCES articles(id),
             FOREIGN KEY (commentator) REFERENCES users(id)
 );

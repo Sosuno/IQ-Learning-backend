@@ -9,6 +9,7 @@ import com.iqlearning.database.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +18,6 @@ public class UserService implements IUserService {
 
     @Autowired
     private UserRepository repo;
-    @Autowired
-    private IQuestionService questionService;
-
 
     @Override
     public User getUser(long id) {
@@ -69,7 +67,13 @@ public class UserService implements IUserService {
 
     @Override
     public List<User> getAllUsers() {
-        return (List<User>)repo.findAll();
+        User u = getUser(1);
+        /*
+        List<User> users = new ArrayList<>();
+        for (User u : repo.findAll()) {
+            users.add(u);
+        }*/
+        return repo.getAll();
     }
 
     @Override

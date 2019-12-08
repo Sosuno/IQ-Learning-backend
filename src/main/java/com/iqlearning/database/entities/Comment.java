@@ -1,5 +1,7 @@
 package com.iqlearning.database.entities;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -20,8 +22,20 @@ public class Comment {
     private int upvotes;
     @Column(name = "created_on")
     private Timestamp createdOn;
+    @Column(name = "upvoted_by")
+    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
+    private Long[] upvotedBy;
 
     public Comment(){}
+
+    public Comment(Long articleId, Long commentator, String comment, int upvotes, Timestamp createdOn, Long[] upvotedBy) {
+        this.articleId = articleId;
+        this.commentator = commentator;
+        this.comment = comment;
+        this.upvotes = upvotes;
+        this.createdOn = createdOn;
+        this.upvotedBy = upvotedBy;
+    }
 
     public Comment(Long articleId, Long commentator, String comment, int upvotes, Timestamp createdOn) {
         this.articleId = articleId;
@@ -77,5 +91,13 @@ public class Comment {
 
     public void setCreatedOn(Timestamp createdOn) {
         this.createdOn = createdOn;
+    }
+
+    public Long[] getUpvotedBy() {
+        return upvotedBy;
+    }
+
+    public void setUpvotedBy(Long[] upvotedBy) {
+        this.upvotedBy = upvotedBy;
     }
 }
