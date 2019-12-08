@@ -4,6 +4,7 @@ package com.iqlearning.database.service;
  */
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.repository.UserRepository;
+import com.iqlearning.database.service.interfaces.IQuestionService;
 import com.iqlearning.database.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private UserRepository repo;
+    @Autowired
+    private IQuestionService questionService;
+
 
     @Override
     public User getUser(long id) {
