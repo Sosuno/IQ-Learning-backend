@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 
@@ -39,13 +40,17 @@ public class QuestionController {
 
     private QuestionsManagement que;
 
+    @PostConstruct
+    private void init() {
+        que = new QuestionsManagement(questionService, answerService, subjectService);
+    }
+
     @PutMapping("/question/add")
     public ResponseEntity<?> addQuestion(@RequestHeader Map<String, String> headers, @RequestBody FilledQuestion filledQuestion) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         filledQuestion.setOwner(user.getId());
-        que = new QuestionsManagement(questionService, answerService, subjectService);
         if(filledQuestion.getSubject() == null || filledQuestion.getQuestion() == null
                 || (filledQuestion.isChoiceTest() && filledQuestion.getAnswers() == null)) {
             return new ResponseEntity<>("Fill all required fields" + filledQuestion, HttpStatus.BAD_REQUEST);
@@ -80,7 +85,6 @@ public class QuestionController {
     public ResponseEntity<?> updateQuestion(@RequestHeader Map<String, String> headers, @RequestBody FilledQuestion filledQuestion) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        que = new QuestionsManagement(questionService, answerService, subjectService);
         Boolean isTrue = false;
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         if(filledQuestion.getId() == null) return new ResponseEntity<>("Question id is null", HttpStatus.BAD_REQUEST);
