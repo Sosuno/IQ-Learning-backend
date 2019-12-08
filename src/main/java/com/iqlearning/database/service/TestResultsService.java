@@ -4,6 +4,7 @@ import com.iqlearning.database.entities.TestResults;
 import com.iqlearning.database.repository.TestResultsRepository;
 import com.iqlearning.database.service.interfaces.ITestResults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class TestResultsService implements ITestResults {
     }
 
     @Override
+    @Transactional
     public TestResults saveTestResults(TestResults s) {
         return repo.save(s);
     }

@@ -3,6 +3,7 @@ package com.iqlearning.database.entities;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Entity
 @Table(name = "tests_results")
 public class TestResults {
 
@@ -14,7 +15,7 @@ public class TestResults {
     @Column(name = "question_id", nullable = false)
     private Long questionId;
     @Column(name = "points", nullable = false)
-    private float points;
+    private double points;
     @Column(name = "results_owner", nullable = false)
     private Long resultsOwner;
     @Column(name = "student_id")
@@ -24,7 +25,7 @@ public class TestResults {
 
     public TestResults() {}
 
-    public TestResults(Long test_id, Long question_id, float points, Long resultsOwner) {
+    public TestResults(Long test_id, Long question_id, double points, Long resultsOwner) {
         this.testId = test_id;
         this.questionId = question_id;
         this.points = points;
@@ -33,7 +34,7 @@ public class TestResults {
     /*
     * Do not use, until students implementation
     * */
-    public TestResults(Long testId, Long questionId, float points, Long resultsOwner, Long studentId, Timestamp created) {
+    public TestResults(Long testId, Long questionId, double points, Long resultsOwner, Long studentId, Timestamp created) {
         this.testId = testId;
         this.questionId = questionId;
         this.points = points;
@@ -66,11 +67,11 @@ public class TestResults {
         this.questionId = question_id;
     }
 
-    public float getPoints() {
+    public double getPoints() {
         return points;
     }
 
-    public void setPoints(float points) {
+    public void setPoints(double points) {
         this.points = points;
     }
 
