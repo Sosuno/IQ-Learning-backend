@@ -3,6 +3,7 @@ package com.iqlearning.database;
 
 import com.iqlearning.database.entities.*;
 import com.iqlearning.database.service.interfaces.*;
+import com.iqlearning.database.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +30,35 @@ public class MyTestController {
     @Autowired
     private IQuestionService questionService;
 
+    @Autowired
+    private IChatService chat;
+
     private User u1;
     private Session s;
 
+
+    @RequestMapping(value = "/test/chat/send", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public List<Message> sent() {
+        List<Message> chatHistory = new ArrayList<>();
+        Message m = new Message("Hi");
+        m.setSender(1L);
+        m.setRecipient(2L);
+        chatHistory.add(chat.sendMessage(m));
+        m.setMessage("dudududu");
+        chatHistory.add(chat.sendMessage(m));
+        m.setMessage("Hiya");
+        m.setSender(2L);
+        m.setRecipient(1L);
+        chatHistory.add(chat.sendMessage(m));
+        return chatHistory;
+    }
+
+    @RequestMapping(value = "/test/chat/history", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public List<Message> history() {
+    return chat.getConversationHistory(1L,2L);
+    }
 
     @RequestMapping(value = "/test/a/get", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
