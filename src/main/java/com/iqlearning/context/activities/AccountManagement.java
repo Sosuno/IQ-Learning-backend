@@ -1,7 +1,7 @@
 package com.iqlearning.context.activities;
 
-import com.iqlearning.context.objects.LoggedUser;
-import com.iqlearning.context.security.PasswordEncoderConfig;
+import com.iqlearning.context.utils.LoggedUser;
+import com.iqlearning.context.utils.PasswordEncoderConfig;
 import com.iqlearning.database.entities.Session;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.interfaces.ISessionService;

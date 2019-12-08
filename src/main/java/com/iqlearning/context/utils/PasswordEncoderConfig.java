@@ -1,4 +1,4 @@
-package com.iqlearning.context.security;
+package com.iqlearning.context.utils;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

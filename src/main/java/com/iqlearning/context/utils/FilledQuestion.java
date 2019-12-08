@@ -1,4 +1,4 @@
-package com.iqlearning.context.objects;
+package com.iqlearning.context.utils;
 
 import com.iqlearning.database.entities.Answer;
 import com.iqlearning.database.entities.Question;

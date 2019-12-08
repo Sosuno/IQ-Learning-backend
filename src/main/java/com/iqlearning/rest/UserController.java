@@ -1,7 +1,7 @@
 package com.iqlearning.rest;
 
 import com.iqlearning.context.activities.AccountManagement;
-import com.iqlearning.context.objects.LoggedUser;
+import com.iqlearning.context.utils.LoggedUser;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.interfaces.ISessionService;
 import com.iqlearning.database.service.interfaces.IUserService;

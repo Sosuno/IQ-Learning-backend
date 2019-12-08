@@ -1,8 +1,6 @@
 package com.iqlearning.database;
 
 
-import com.iqlearning.context.activities.AccountManagement;
-import com.iqlearning.context.objects.LoggedUser;
 import com.iqlearning.database.entities.*;
 import com.iqlearning.database.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 @Controller
 public class MyTestController {

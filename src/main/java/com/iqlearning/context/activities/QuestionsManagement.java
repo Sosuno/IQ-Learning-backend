@@ -1,7 +1,7 @@
 package com.iqlearning.context.activities;
 
 
-import com.iqlearning.context.objects.FilledQuestion;
+import com.iqlearning.context.utils.FilledQuestion;
 import com.iqlearning.database.entities.Answer;
 import com.iqlearning.database.entities.Question;
 import com.iqlearning.database.service.interfaces.IAnswerService;
