@@ -4,28 +4,14 @@ import java.util.List;
 
 public class ResultForm {
 
-    public Long getTestId() {
-        return testId;
-    }
-
-    public void setTestId(Long testId) {
-        this.testId = testId;
-    }
-
-    public List<Result> getResultList() {
-        return resultList;
-    }
-
-    public void setResultList(List<Result> resultList) {
-        this.resultList = resultList;
-    }
-
     private Long testId;
 
     private List<Result> resultList;
 
-    public class Result {
+    public static class Result {
         private Long questionId;
+        private double points;
+        private Long studentId;
 
         public Long getQuestionId() {
             return questionId;
@@ -51,9 +37,31 @@ public class ResultForm {
             this.studentId = studentId;
         }
 
-        private double points;
-        private Long studentId;
+        public Result(Long questionId, double points, Long studentId) {
+            this.questionId = questionId;
+            this.points = points;
+            this.studentId = studentId;
+        }
+
+
     }
+
+    public Long getTestId() {
+        return testId;
+    }
+
+    public void setTestId(Long testId) {
+        this.testId = testId;
+    }
+
+    public List<Result> getResultList() {
+        return resultList;
+    }
+
+    public void setResultList(List<Result> resultList) {
+        this.resultList = resultList;
+    }
+
 
 
 

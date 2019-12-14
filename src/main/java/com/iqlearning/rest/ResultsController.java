@@ -41,7 +41,8 @@ public class ResultsController {
         if(testService.getTest(resultForm.getTestId()) == null) return new ResponseEntity<>("Test with given id doesn't exist", HttpStatus.BAD_REQUEST);
         List<TestResults> testResultsList = new ArrayList<>();
         List<TestResults> savedTestResultsList = new ArrayList<>();
-        for(ResultForm.Result r : resultForm.getResultList()) {
+        List<ResultForm.Result> results =  resultForm.getResultList();
+        for(ResultForm.Result r : results) {
             TestResults testResults = new TestResults();
             testResults.setTestId(resultForm.getTestId());
             if(questionService.get(r.getQuestionId()) == null) return new ResponseEntity<>("Question with given id doesn't exist", HttpStatus.BAD_REQUEST);
