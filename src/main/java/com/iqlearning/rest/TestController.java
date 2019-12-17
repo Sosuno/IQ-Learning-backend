@@ -1,5 +1,8 @@
 package com.iqlearning.rest;
 
+import com.iqlearning.context.activities.QuestionsManagement;
+import com.iqlearning.context.utils.FilledQuestion;
+import com.iqlearning.context.utils.FullTest;
 import com.iqlearning.database.entities.*;
 import com.iqlearning.database.service.interfaces.*;
 import com.iqlearning.rest.resource.TestForm;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,9 +28,13 @@ public class TestController {
     @Autowired
     private ISubjectService subjectService;
     @Autowired
+    private IAnswerService answerService;
+    @Autowired
     private IQuestionService questionService;
     @Autowired
     private ITestService testService;
+
+    private QuestionsManagement que;
 
     @PutMapping("/test/add")
     public ResponseEntity<?> addTest(@RequestHeader Map<String, String> headers, @RequestBody TestForm testForm) {
@@ -109,9 +117,11 @@ public class TestController {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Test> testList = testService.getTestsByUser(user.getId());
-        if(testList.isEmpty()) {
-            return new ResponseEntity<>("Question list empty" , HttpStatus.OK);
-        } else return new ResponseEntity<>(testList, HttpStatus.OK);
+        List<FullTest> fullTestList = new ArrayList<>();
+        for(Test t : testList) {
+            fullTestList.add(testFiller(t));
+        }
+        return new ResponseEntity<>(fullTestList, HttpStatus.OK);
     }
 
     @GetMapping("/tests/get/user/subject/{id}")
@@ -124,8 +134,11 @@ public class TestController {
         Subject subject = subjectService.getSubject(id);
         if(subject.getId() == null) return new ResponseEntity<>("Invalid subject", HttpStatus.BAD_REQUEST);
         List<Test> testList = testService.getTestsByUserAndSubject(user.getId(), id);
-        if(testList.isEmpty()) return new ResponseEntity<>("Test list empty", HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<>(testList, HttpStatus.OK);
+        List<FullTest> fullTestList = new ArrayList<>();
+        for(Test t : testList) {
+            fullTestList.add(testFiller(t));
+        }
+        return new ResponseEntity<>(fullTestList, HttpStatus.OK);
     }
 
     @GetMapping("/test/get/{id}")
@@ -139,7 +152,8 @@ public class TestController {
         Test test = testService.getTest(id);
         if(test == null) return new ResponseEntity<>("Test not found", HttpStatus.BAD_REQUEST);
         if(test.getOwner() != user.getId()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<>(test, HttpStatus.OK);
+        FullTest fullTest = testFiller(test);
+        return new ResponseEntity<>(fullTest, HttpStatus.OK);
     }
 
     @GetMapping("/tests/get/public")
@@ -149,8 +163,11 @@ public class TestController {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Test> testList = testService.getSharedTests();
-        if (testList.isEmpty()) return new ResponseEntity<>("No shared tests available", HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<>(testList, HttpStatus.OK);
+        List<FullTest> fullTestList = new ArrayList<>();
+        for(Test t : testList) {
+            fullTestList.add(testFiller(t));
+        }
+        return new ResponseEntity<>(fullTestList, HttpStatus.OK);
     }
 
     @GetMapping("/tests/get/public/subject/{id}")
@@ -162,7 +179,22 @@ public class TestController {
         Subject subject = subjectService.getSubject(id);
         if(subject.getId() == null) return new ResponseEntity<>("Invalid subject", HttpStatus.BAD_REQUEST);
         List<Test> testList = testService.getSharedTestsBySubject(id);
-        if (testList.isEmpty()) return new ResponseEntity<>("No shared tests available", HttpStatus.BAD_REQUEST);
-        else return new ResponseEntity<>(testList, HttpStatus.OK);
+        List<FullTest> fullTestList = new ArrayList<>();
+        for(Test t : testList) {
+            fullTestList.add(testFiller(t));
+        }
+        return new ResponseEntity<>(fullTestList, HttpStatus.OK);
+    }
+
+    private FullTest testFiller(Test test) {
+        List<Question> questionList = new ArrayList<>();
+        for(Long l : test.getQuestions()) {
+            Question q = questionService.get(l);
+            if(q != null) questionList.add(q);
+        }
+        que = new QuestionsManagement(questionService, answerService, subjectService);
+        List<FilledQuestion> filledQuestionList = que.getReadyQuestions(questionList);
+        FullTest fullTest = new FullTest(test, filledQuestionList);
+        return fullTest;
     }
 }
