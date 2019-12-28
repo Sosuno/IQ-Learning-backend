@@ -21,13 +21,14 @@ public class ChatService implements IChatService{
     public List<Message> getConversationHistory(Long user1, Long user2) {
         List<Message> history = new ArrayList<>();
         List<Chat> chatHistory = repo.getAllByUser1AndUser2OrderBySentOnDesc(user1,user2);
-        if(chatHistory == null) chatHistory = repo.getAllByUser1AndUser2OrderBySentOnDesc(user2,user1);
+        if(chatHistory.isEmpty()) chatHistory = repo.getAllByUser1AndUser2OrderBySentOnDesc(user2,user1);
         Message m;
         for (Chat c:chatHistory) {
             m = new Message(c.getMessage());
             m.setSender(c.getSender());
             if(c.getUser1().equals(c.getSender())) m.setRecipient(c.getUser2());
             else m.setRecipient(c.getUser1());
+            m.setSent(c.getSentOn());
             history.add(m);
         }
         return history;
