@@ -29,13 +29,9 @@ public class ResultForm {
             this.points = points;
         }
 
-        public Long getStudentId() {
-            return studentId;
-        }
+        public Long getStudentId() { return studentId; }
 
-        public void setStudentId(Long studentId) {
-            this.studentId = studentId;
-        }
+        public void setStudentId(Long studentId) {this.studentId = studentId;}
 
         public Result(Long questionId, double points, Long studentId) {
             this.questionId = questionId;

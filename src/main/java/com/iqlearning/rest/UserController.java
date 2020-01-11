@@ -10,7 +10,6 @@ import com.iqlearning.rest.resource.UserForm;
 import com.iqlearning.rest.resource.PasswordForm;
 import com.iqlearning.rest.resource.RegisterForm;
 import com.iqlearning.rest.resource.Token;
-import com.iqlearning.rest.utils.HeaderUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,7 +35,6 @@ public class UserController {
     private ISessionService sessionService;
 
     private AccountManagement acc;
-    private HeaderUtility headerUtility = new HeaderUtility();
 
 
     @PostMapping("/user/token")
@@ -65,7 +63,7 @@ public class UserController {
 
     @DeleteMapping("/user/logout")
     public ResponseEntity<?> logoutUser(@RequestHeader Map<String, String> headers) {
-        String token = headerUtility.getTokenFromHeader(headers);
+        String token = headers.get("authorization").split(" ")[1];
         acc = new AccountManagement(userService,sessionService);
         User u = userService.getUserBySession(token);
         if (u.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
@@ -88,7 +86,7 @@ public class UserController {
 
     @PostMapping("/user/name")
     public ResponseEntity<?> editNameAndSurname(@RequestHeader Map<String, String> headers, @RequestBody UserForm userForm) {
-        String token = headerUtility.getTokenFromHeader(headers);
+        String token = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(token);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         else {
@@ -100,7 +98,7 @@ public class UserController {
 
     @PostMapping("/user/password")
     public ResponseEntity<?> editPassword(@RequestHeader Map<String, String> headers, @RequestBody PasswordForm passwordForm) {
-        String token = headerUtility.getTokenFromHeader(headers);
+        String token = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(token);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         else if(!passwordForm.getCurrentPass().equals(user.getPassword())) {
