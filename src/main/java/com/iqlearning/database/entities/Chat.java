@@ -20,15 +20,18 @@ public class Chat {
     private String message;
     @Column(name = "sentOn")
     private Timestamp sentOn = new Timestamp(System.currentTimeMillis());
+    @Column(name = "read")
+    private boolean read;
 
     public Chat() {}
 
-    public Chat(Long user1, Long user2, Long sender, String message, Timestamp sentOn) {
+    public Chat(Long user1, Long user2, Long sender, String message, Timestamp sentOn, boolean read) {
         this.user1 = user1;
         this.user2 = user2;
         this.sender = sender;
         this.message = message;
         this.sentOn = sentOn;
+        this.read = read;
     }
 
     public Long getId() {
@@ -77,5 +80,13 @@ public class Chat {
 
     public void setSentOn(Timestamp sentOn) {
         this.sentOn = sentOn;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }

@@ -6,10 +6,12 @@ import com.iqlearning.database.service.interfaces.IChatService;
 import com.iqlearning.database.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChatService implements IChatService{
@@ -24,11 +26,7 @@ public class ChatService implements IChatService{
         if(chatHistory.isEmpty()) chatHistory = repo.getAllByUser1AndUser2OrderBySentOnDesc(user2,user1);
         Message m;
         for (Chat c:chatHistory) {
-            m = new Message(c.getMessage());
-            m.setSender(c.getSender());
-            if(c.getUser1().equals(c.getSender())) m.setRecipient(c.getUser2());
-            else m.setRecipient(c.getUser1());
-            m.setSent(c.getSentOn());
+            m = new Message(c);
             history.add(m);
         }
         return history;
@@ -54,5 +52,25 @@ public class ChatService implements IChatService{
         if(c.getUser1().equals(c.getSender())) message.setRecipient(c.getUser2());
         else message.setRecipient(c.getUser1());
         return message;
+    }
+
+    @Override
+    public List<Message> getUnread(Long user) {
+        List<Message> history = new ArrayList<>();
+        List<Chat> chat = repo.getAllUnread(user);
+        if(!chat.isEmpty()) {
+            Message m;
+            for (Chat c : chat) {
+                m = new Message(c);
+                history.add(m);
+            }
+        }
+        return history;
+    }
+
+    @Transactional
+    @Override
+    public void readMessage(Long recipient, Long sender) {
+      repo.readMessages(sender,recipient);
     }
 }

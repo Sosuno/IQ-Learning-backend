@@ -97,6 +97,7 @@ CREATE TABLE chat(
             sender BIGINT NOT NULL,
             message text NOT NULL,
             sent_on TIMESTAMP DEFAULT now(),
+            read BOOLEAN DEFAULT false,
             FOREIGN KEY (user1) REFERENCES users(id),
             FOREIGN KEY (user2) REFERENCES users(id),
             FOREIGN KEY (sender) REFERENCES users(id)
