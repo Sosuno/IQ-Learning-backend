@@ -87,7 +87,8 @@ public class UserController {
     @PostMapping("/user/update")
     public ResponseEntity<?> editUser(@RequestHeader Map<String, String> headers, @RequestBody UserForm userForm) {
         String token = headers.get("authorization").split(" ")[1];
-        User user = userService.getUserBySession(token);
+        acc = new AccountManagement(userService,sessionService);
+        LoggedUser user = acc.loginWithSession(token);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         else {
             if(userForm.getUsername() != null) user.setUsername(userForm.getUsername());
@@ -100,7 +101,7 @@ public class UserController {
             if(userForm.getTwitter() != null) user.setTwitter(userForm.getTwitter());
             if(userForm.getReddit() != null) user.setReddit(userForm.getReddit());
             if(userForm.getYoutube() != null) user.setYoutube(userForm.getYoutube());
-            return new ResponseEntity<>( userService.saveUser(user), HttpStatus.OK);
+            return new ResponseEntity<>( acc.updateUser(user), HttpStatus.OK);
         }
     }
 
