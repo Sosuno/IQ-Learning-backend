@@ -90,12 +90,17 @@ public class QuestionService implements IQuestionService {
 
     @Override
     public void deleteQuestion(Question q) {
-        repo.delete(q);
+        q.setShareable(false);
+        q.setOwner(1L);
+        repo.save(q);
     }
 
     @Override
     public void deleteQuestion(Long id) {
-        repo.deleteById(id);
+        Question q = get(id);
+        q.setShareable(false);
+        q.setOwner(1L);
+        repo.save(q);
     }
 
     @Override
