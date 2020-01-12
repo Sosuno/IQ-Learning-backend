@@ -117,15 +117,15 @@ public class AccountManagement {
 
     public LoggedUser updateUser(LoggedUser loggedUser){
         user = service.getUserBySession(loggedUser.getSessionID());
-        if(!user.getName().equals(loggedUser.getName()) && loggedUser.getName() != null) user.setName(loggedUser.getName());
-        if(!user.getSurname().equals(loggedUser.getSurname())&& loggedUser.getSurname() != null) user.setSurname(loggedUser.getSurname());
-        if(!user.getEmail().equals(loggedUser.getEmail())&& loggedUser.getEmail() != null) user.setEmail(loggedUser.getEmail());
-        if(!user.getAvatar().equals(loggedUser.getAvatar())&& loggedUser.getAvatar() != null) user.setAvatar(loggedUser.getAvatar());
-        if(!user.getBio().equals(loggedUser.getBio())&& loggedUser.getBio() != null) user.setBio(loggedUser.getBio());
-        if(!user.getLinkedIn().equals(loggedUser.getLinkedIn())&& loggedUser.getLinkedIn() != null) user.setLinkedIn(loggedUser.getLinkedIn());
-        if(!user.getTwitter().equals(loggedUser.getTwitter())&& loggedUser.getTwitter() != null)user.setTwitter(loggedUser.getTwitter());
-        if(!user.getReddit().equals(loggedUser.getReddit())&& loggedUser.getReddit() != null)user.setReddit(loggedUser.getReddit());
-        if(!user.getYoutube().equals(loggedUser.getYoutube())&& loggedUser.getYoutube() != null)user.setYoutube(loggedUser.getYoutube());
+        if(user.getName() != loggedUser.getName() && loggedUser.getName() != null) user.setName(loggedUser.getName());
+        if(user.getSurname() != loggedUser.getSurname() && loggedUser.getSurname() != null) user.setSurname(loggedUser.getSurname());
+        if(user.getEmail() != loggedUser.getEmail() && loggedUser.getEmail() != null) user.setEmail(loggedUser.getEmail());
+        if(user.getAvatar() != loggedUser.getAvatar() && loggedUser.getAvatar() != null) user.setAvatar(loggedUser.getAvatar());
+        if(user.getBio() != loggedUser.getBio() && loggedUser.getBio() != null) user.setBio(loggedUser.getBio());
+        if(user.getLinkedIn() != loggedUser.getLinkedIn() && loggedUser.getLinkedIn() != null) user.setLinkedIn(loggedUser.getLinkedIn());
+        if(user.getTwitter() != loggedUser.getTwitter() && loggedUser.getTwitter() != null)user.setTwitter(loggedUser.getTwitter());
+        if(user.getReddit() != loggedUser.getReddit() && loggedUser.getReddit() != null)user.setReddit(loggedUser.getReddit());
+        if(user.getYoutube() != (loggedUser.getYoutube())&& loggedUser.getYoutube() != null)user.setYoutube(loggedUser.getYoutube());
 
         return new LoggedUser(service.saveUser(user), loggedUser.getSessionID());
     }
