@@ -186,6 +186,45 @@ public Comment addComment() {
     }
 
 
+    @RequestMapping(value = "/test/chat/unread", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public List<Message> unread() {
+        List<Message> chatHistory = new ArrayList<>();
+        Message m = new Message("Hi");
+        m.setSender(1L);
+        m.setRecipient(2L);
+        chatHistory.add(chat.sendMessage(m));
+        m.setMessage("dudududu");
+        chatHistory.add(chat.sendMessage(m));
+        m.setMessage("Hiya");
+        m.setSender(2L);
+        m.setRecipient(1L);
+        chatHistory.add(chat.sendMessage(m));
+        return chat.getUnread(1L);
+    }
+
+    @RequestMapping(value = "/test/chat/read", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public List<Message> read() {
+        List<Message> chatHistory = new ArrayList<>();
+        Message m = new Message("Hi");
+        m.setSender(1L);
+        m.setRecipient(2L);
+        chatHistory.add(chat.sendMessage(m));
+        m.setMessage("dudududu");
+        chatHistory.add(chat.sendMessage(m));
+        m.setMessage("Hiya");
+        m.setSender(2L);
+        m.setRecipient(1L);
+        chatHistory.add(chat.sendMessage(m));
+
+        for(Message mes: chatHistory){
+            if(mes.getSender() == 1L) chat.readMessage(mes.getRecipient(),mes.getSender());
+        }
+
+        return history();
+    }
+
     @RequestMapping(value = "/test/chat/send", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
     public List<Message> sent() {
