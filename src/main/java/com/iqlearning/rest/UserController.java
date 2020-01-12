@@ -39,7 +39,6 @@ public class UserController {
 
     @PostMapping("/user/token")
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
-
         acc = new AccountManagement(userService,sessionService);
         LoggedUser user = acc.login(loginForm.getUsername(), loginForm.getPassword());
         if(user == null) {
@@ -85,14 +84,22 @@ public class UserController {
                 .body("Session expired");
     }
 
-    @PostMapping("/user/name")
-    public ResponseEntity<?> editNameAndSurname(@RequestHeader Map<String, String> headers, @RequestBody UserForm userForm) {
+    @PostMapping("/user/update")
+    public ResponseEntity<?> editUser(@RequestHeader Map<String, String> headers, @RequestBody UserForm userForm) {
         String token = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(token);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         else {
+            if(userForm.getUsername() != null) user.setUsername(userForm.getUsername());
+            if(userForm.getEmail() != null) user.setEmail(userForm.getEmail());
             if(userForm.getName() != null) user.setName(userForm.getName());
             if(userForm.getSurname() != null) user.setSurname(userForm.getSurname());
+            if(userForm.getAvatar() != null) user.setAvatar(userForm.getAvatar());
+            if(userForm.getBio() != null) user.setBio(userForm.getBio());
+            if(userForm.getLinkedIn() != null) user.setLinkedIn(userForm.getLinkedIn());
+            if(userForm.getTwitter() != null) user.setTwitter(userForm.getTwitter());
+            if(userForm.getReddit() != null) user.setReddit(userForm.getReddit());
+            if(userForm.getYoutube() != null) user.setYoutube(userForm.getYoutube());
             return new ResponseEntity<>( userService.saveUser(user), HttpStatus.OK);
         }
     }
