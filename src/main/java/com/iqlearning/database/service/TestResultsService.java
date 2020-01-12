@@ -4,10 +4,12 @@ import com.iqlearning.database.entities.TestResults;
 import com.iqlearning.database.repository.TestResultsRepository;
 import com.iqlearning.database.service.interfaces.ITestResults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Service
 public class TestResultsService implements ITestResults {
     @Autowired
     TestResultsRepository repo;

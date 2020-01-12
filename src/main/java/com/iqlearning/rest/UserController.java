@@ -39,7 +39,6 @@ public class UserController {
 
     @PostMapping("/user/token")
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
-
         acc = new AccountManagement(userService,sessionService);
         LoggedUser user = acc.login(loginForm.getUsername(), loginForm.getPassword());
         if(user == null) {
