@@ -21,9 +21,9 @@ public class Question {
     @Column(name = "shareable", nullable = false)
     private boolean shareable;
     @Column(name = "created", nullable = false)
-    private Timestamp created;
+    private Timestamp created = new Timestamp(System.currentTimeMillis());
     @Column(name = "last_edited")
-    private Timestamp lastEdited;
+    private Timestamp lastEdited = new Timestamp(System.currentTimeMillis());
 
 
     public Question(Long owner, Long subject, String question, boolean choice_test, boolean shareable) {

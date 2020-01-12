@@ -41,7 +41,7 @@ public class User{
     @Column(name = "status", nullable = false)
     private int status;
     @Column(name = "creation_time", nullable = false)
-    private Timestamp creationTime;
+    private Timestamp creationTime = new Timestamp(System.currentTimeMillis());
     @Column(name = "login_tries", nullable = false)
     private int loginTries;
     @Column(name = "avatar")

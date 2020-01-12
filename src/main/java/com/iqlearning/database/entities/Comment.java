@@ -3,6 +3,7 @@ package com.iqlearning.database.entities;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity
@@ -21,9 +22,11 @@ public class Comment {
     @Column(name = "upvotes")
     private int upvotes;
     @Column(name = "created_on")
-    private Timestamp createdOn;
-    @Column(name = "upvoted_by")
-    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
+    private Timestamp createdOn = new Timestamp(System.currentTimeMillis());
+    @Column(name = "edited_on")
+    private Timestamp editedOn = new Timestamp(System.currentTimeMillis());
+    @Type(type = "long-array")
+    @Column(name = "upvoted_by", columnDefinition = "bigint[]")
     private Long[] upvotedBy;
 
     public Comment(){}
@@ -34,6 +37,7 @@ public class Comment {
         this.comment = comment;
         this.upvotes = upvotes;
         this.createdOn = createdOn;
+        this.editedOn = createdOn;
         this.upvotedBy = upvotedBy;
     }
 
@@ -99,5 +103,13 @@ public class Comment {
 
     public void setUpvotedBy(Long[] upvotedBy) {
         this.upvotedBy = upvotedBy;
+    }
+
+    public Timestamp getEditedOn() {
+        return editedOn;
+    }
+
+    public void setEditedOn(Timestamp editedOn) {
+        this.editedOn = editedOn;
     }
 }

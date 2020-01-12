@@ -1,4 +1,4 @@
-package com.iqlearning.database.utils;
+package com.iqlearning.database.utils.customTypes;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;

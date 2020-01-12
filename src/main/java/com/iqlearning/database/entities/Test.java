@@ -18,14 +18,14 @@ public class Test {
     @Column(name = "subject")
     private Long subject;
     @Column(name = "questions")
-    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
+    @Type(type = "com.iqlearning.database.utils.customTypes.GenericArrayUserType")
     private Long[] questions;
     @Column(name = "shareable")
     private boolean shareable;
     @Column(name = "created")
-    private Timestamp created;
+    private Timestamp created = new Timestamp(System.currentTimeMillis());
     @Column(name = "last_edited")
-    private Timestamp lastEdited;
+    private Timestamp lastEdited = new Timestamp(System.currentTimeMillis());
     @Column(name = "downloads")
     private int downloads;
 

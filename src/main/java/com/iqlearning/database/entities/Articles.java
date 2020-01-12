@@ -14,28 +14,37 @@ public class Articles {
     private Long id;
     @Column(name = "owner")
     private Long owner;
+    @Column(name = "title")
+    private String title;
     @Column(name = "contents")
     private String content;
     @Column(name = "upvotes")
     private int upvotes;
     @Column(name = "created_on")
-    private Timestamp createdOn;
-    @Column(name = "upvoted_by")
-    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
+    private Timestamp createdOn = new Timestamp(System.currentTimeMillis());
+    @Column(name = "edited_on")
+    private Timestamp editedOn = new Timestamp(System.currentTimeMillis());
+    @Type(type = "long-array")
+    @Column(name = "upvoted_by",  columnDefinition = "bigint[]")
     private Long[] upvotedBy;
-    @Column(name = "tags")
-    @Type(type = "com.iqlearning.database.utils.GenericArrayUserType")
+    @Type(type = "long-array")
+    @Column(name = "tags", columnDefinition = "bigint[]")
     private Long[] tags;
+    @Column(name="image")
+    private byte[] image;
 
     public Articles() {}
 
-    public Articles(Long owner, String content, int upvotes, Timestamp createdOn, Long[] upvotedBy, Long[] tags) {
+    public Articles(Long owner, String content,String title, int upvotes, Timestamp createdOn, Long[] upvotedBy, Long[] tags) {
         this.owner = owner;
         this.content = content;
         this.upvotes = upvotes;
         this.createdOn = createdOn;
+        this.editedOn = createdOn;
         this.upvotedBy = upvotedBy;
         this.tags = tags;
+        image = null;
+        this.title = title;
     }
 
     public Articles(Long owner, String content, int upvotes, Timestamp createdOn) {
@@ -43,7 +52,9 @@ public class Articles {
         this.content = content;
         this.upvotes = upvotes;
         this.createdOn = createdOn;
+        image = null;
     }
+
 
     public Long getId() {
         return id;
@@ -99,5 +110,29 @@ public class Articles {
 
     public void setTags(Long[] tags) {
         this.tags = tags;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Timestamp getEditedOn() {
+        return editedOn;
+    }
+
+    public void setEditedOn(Timestamp editedOn) {
+        this.editedOn = editedOn;
     }
 }

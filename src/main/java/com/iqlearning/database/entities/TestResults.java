@@ -19,9 +19,9 @@ public class TestResults {
     @Column(name = "results_owner", nullable = false)
     private Long resultsOwner;
     @Column(name = "student_id")
-    private Long studentId;
+    private Long studentId = 0L;
     @Column(name = "created")
-    private Timestamp created;
+    private Timestamp created = new Timestamp(System.currentTimeMillis());
 
     public TestResults() {}
 
