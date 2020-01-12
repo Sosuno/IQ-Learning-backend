@@ -15,7 +15,7 @@ public class Session {
     @Column(name = "user_id")
     private Long userID;
     @Column(name = "creation_time")
-    private Timestamp creationTime;
+    private Timestamp creationTime = new Timestamp(System.currentTimeMillis());
 
     public Session(){
 

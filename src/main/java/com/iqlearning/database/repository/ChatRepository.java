@@ -4,9 +4,11 @@ import com.iqlearning.database.entities.Chat;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ChatRepository extends CrudRepository<Chat,Long> {
 
     List<Chat> getAllByUser1AndUser2OrderBySentOnDesc(Long user1, Long user2);

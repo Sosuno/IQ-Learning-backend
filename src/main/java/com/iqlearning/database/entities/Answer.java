@@ -17,9 +17,9 @@ public class Answer {
     @Column(name = "correct", nullable = false)
     private boolean correct;
     @Column(name = "created", nullable = false)
-    private Timestamp created;
+    private Timestamp created = new Timestamp(System.currentTimeMillis());
     @Column(name = "last_edited")
-    private Timestamp lastEdited;
+    private Timestamp lastEdited = new Timestamp(System.currentTimeMillis());
 
 
     public Answer(Long question_id, String answer, boolean correct) {

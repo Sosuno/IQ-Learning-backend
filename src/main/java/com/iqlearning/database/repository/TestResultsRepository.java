@@ -15,4 +15,3 @@ public interface TestResultsRepository extends CrudRepository<TestResults,Long> 
     List<TestResults> getAllByQuestionIdAndResultsOwner(Long questionId, Long ownerId);
 
 }
-

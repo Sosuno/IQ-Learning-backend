@@ -19,7 +19,7 @@ public class Chat {
     @Column(name = "message")
     private String message;
     @Column(name = "sentOn")
-    private Timestamp sentOn;
+    private Timestamp sentOn = new Timestamp(System.currentTimeMillis());
 
     public Chat() {}
 

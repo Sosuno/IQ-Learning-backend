@@ -23,5 +23,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query("SELECT s.userID FROM Session s WHERE sessionID = :sessionId")
     Optional<Long> getUserBySession(@Param("sessionId") String sessionId);
 
+    @Query("SELECT s FROM User s")
+    List<User> getAll();
+
 
 }
