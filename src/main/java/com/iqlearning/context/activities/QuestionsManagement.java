@@ -1,19 +1,12 @@
 package com.iqlearning.context.activities;
 
 
-import com.iqlearning.context.utils.FilledQuestion;
-import com.iqlearning.database.entities.Answer;
-import com.iqlearning.database.entities.Question;
 import com.iqlearning.database.service.interfaces.IAnswerService;
 import com.iqlearning.database.service.interfaces.IQuestionService;
 import com.iqlearning.database.service.interfaces.ISubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @Configurable
@@ -29,7 +22,7 @@ public class QuestionsManagement {
         this.answerService = answerService;
         this.subjectService = subjectService;
     }
-
+/*
     public Question addQuestion(FilledQuestion q) {
         Question toDbQ = new Question(q.getOwner(),q.getSubject().getId(),q.getQuestion(),q.isChoiceTest(),q.isShareable(), q.getCreated(), q.getLastEdited());
         toDbQ.setLastEdited(new Timestamp(System.currentTimeMillis()));
@@ -78,9 +71,11 @@ public class QuestionsManagement {
      * Will need rework
      * TODO
      */
+/*
     public void deleteQuestion(Long q) {
         answerService.deleteAnswers(q);
         questionService.deleteQuestion(q);
     }
+    */
 
 }

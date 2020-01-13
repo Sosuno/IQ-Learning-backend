@@ -1,4 +1,4 @@
-package com.iqlearning.context.utils;
+package com.iqlearning.database.utils;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

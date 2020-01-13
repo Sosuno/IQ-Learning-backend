@@ -1,10 +1,10 @@
 package com.iqlearning.rest;
 
 import com.iqlearning.context.activities.AccountManagement;
-import com.iqlearning.context.utils.LoggedUser;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.interfaces.ISessionService;
 import com.iqlearning.database.service.interfaces.IUserService;
+import com.iqlearning.database.utils.LoggedUser;
 import com.iqlearning.rest.resource.LoginForm;
 import com.iqlearning.rest.resource.UserForm;
 import com.iqlearning.rest.resource.PasswordForm;

@@ -15,10 +15,4 @@ public interface ArticlesRepository extends CrudRepository<Articles, Long> {
 
     List<Articles> getAllByTagsInAndTagsIsNotNullOrderByUpvotes(Long[] tags);
 
-    @Procedure(procedureName = "updateTags")
-    Articles updateTags(Long[] tag, Long id);
-
-    @Procedure(procedureName = "updateArticlesUpvotes")
-    Articles updateUpvote(Long[] upvotes, Long id);
-
 }

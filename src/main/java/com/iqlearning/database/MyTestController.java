@@ -40,7 +40,7 @@ public class MyTestController {
 
     private User u1;
     private Session s;
-
+/*
     @RequestMapping(value = "/test/articles/add", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
     public List<?> addArticle() {
@@ -334,4 +334,5 @@ public Comment addComment() {
 
         return list;
     }
+    */
 }

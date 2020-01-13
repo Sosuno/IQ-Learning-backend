@@ -1,14 +1,11 @@
 package com.iqlearning.rest;
 
-import com.iqlearning.context.activities.QuestionsManagement;
-import com.iqlearning.context.utils.FilledQuestion;
-import com.iqlearning.context.utils.FullTest;
+
 import com.iqlearning.database.entities.*;
-import com.iqlearning.database.service.interfaces.*;
+import com.iqlearning.database.service.*;
+import com.iqlearning.database.utils.FilledQuestion;
+import com.iqlearning.database.utils.FullTest;
 import com.iqlearning.rest.resource.TestForm;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.text.WordUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -32,19 +29,15 @@ import java.util.*;
 public class TestController {
 
     @Autowired
-    private IUserService userService;
+    private UserService userService;
     @Autowired
-    private ISessionService sessionService;
+    private SessionService sessionService;
     @Autowired
-    private ISubjectService subjectService;
+    private SubjectService subjectService;
     @Autowired
-    private IAnswerService answerService;
+    private QuestionService questionService;
     @Autowired
-    private IQuestionService questionService;
-    @Autowired
-    private ITestService testService;
-
-    private QuestionsManagement que;
+    private TestService testService;
 
     @PutMapping("/test/add")
     public ResponseEntity<?> addTest(@RequestHeader Map<String, String> headers, @RequestBody TestForm testForm) {
@@ -282,7 +275,7 @@ public class TestController {
                 int answerCounter = 0;
                 if(!q.isChoiceTest()) offsetY -= 10;
                 if(q.isChoiceTest()) {
-                    List<Answer> answerList = answerService.getAnswers(q.getId());
+                    List<Answer> answerList = questionService.getAnswers(q.getId());
                     // changing order of answers for different groups
                     if(i != 1) answerList = answersShuffler(answerList,i);
 
@@ -332,7 +325,7 @@ public class TestController {
                     contentStream.showText(questionCounter+". ");
                     contentStream.endText();
                     questionCounter++;
-                    List<Answer> answerList = answerService.getAnswers(q.getId());
+                    List<Answer> answerList = questionService.getAnswers(q.getId());
                     // changing order of answers for different groups
                     if(i != 1) answerList = answersShuffler(answerList,i);
                     answerCounter = 0;
@@ -376,8 +369,7 @@ public class TestController {
             Question q = questionService.get(l);
             if(q != null) questionList.add(q);
         }
-        que = new QuestionsManagement(questionService, answerService, subjectService);
-        List<FilledQuestion> filledQuestionList = que.getReadyQuestions(questionList);
+        List<FilledQuestion> filledQuestionList = questionService.getReadyQuestions(questionList);
         FullTest fullTest = new FullTest(test, filledQuestionList);
         return fullTest;
     }
