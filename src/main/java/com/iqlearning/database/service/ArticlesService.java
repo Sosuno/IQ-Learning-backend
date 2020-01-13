@@ -72,7 +72,7 @@ public class ArticlesService implements IArticlesService{
                     a.setUpvotes(article.getUpvotes());
                 }
                 a.setEditedOn(new Timestamp(System.currentTimeMillis()));
-            }
+            } else return null;
         }
         return articlesRepo.save(a);
     }
@@ -90,7 +90,7 @@ public class ArticlesService implements IArticlesService{
                     c.setUpvotes(comment.getUpvotes());
                 }
                 c.setEditedOn(new Timestamp(System.currentTimeMillis()));
-            }
+            } else return null;
         }
         return commentsRepo.save(c);
     }
@@ -167,6 +167,20 @@ public class ArticlesService implements IArticlesService{
     @Override
     public Iterable<Tag> getTags() {
         return tagRepo.findAll();
+    }
+
+    @Override
+    public Articles getArticle(Long Id) {
+        Optional<Articles>  o = articlesRepo.findById(Id);
+        if (o.isPresent()) return o.get();
+        return null;
+    }
+
+    @Override
+    public Comment getComment(Long id) {
+        Optional<Comment>  o = commentsRepo.findById(id);
+        if (o.isPresent()) return o.get();
+        return null;
     }
 
     private Tag getTag(Long t){

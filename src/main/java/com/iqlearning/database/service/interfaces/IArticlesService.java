@@ -28,4 +28,8 @@ public interface IArticlesService {
 
     Articles editTags(Long tagId, Long artId);
 
+    Articles getArticle(Long Id);
+
+    Comment getComment(Long id);
+
 }
