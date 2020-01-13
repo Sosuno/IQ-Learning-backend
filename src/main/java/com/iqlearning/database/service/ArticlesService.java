@@ -169,6 +169,20 @@ public class ArticlesService implements IArticlesService{
         return tagRepo.findAll();
     }
 
+    @Override
+    public Articles getArticle(Long Id) {
+        Optional<Articles>  o = articlesRepo.findById(Id);
+        if (o.isPresent()) return o.get();
+        return null;
+    }
+
+    @Override
+    public Comment getComment(Long id) {
+        Optional<Comment>  o = commentsRepo.findById(id);
+        if (o.isPresent()) return o.get();
+        return null;
+    }
+
     private Tag getTag(Long t){
         Optional<Tag> o = tagRepo.findById(t);
         if (o.isPresent()) return o.get();
