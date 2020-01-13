@@ -72,7 +72,7 @@ public class ArticlesService implements IArticlesService{
                     a.setUpvotes(article.getUpvotes());
                 }
                 a.setEditedOn(new Timestamp(System.currentTimeMillis()));
-            }
+            } else return null;
         }
         return articlesRepo.save(a);
     }
@@ -90,7 +90,7 @@ public class ArticlesService implements IArticlesService{
                     c.setUpvotes(comment.getUpvotes());
                 }
                 c.setEditedOn(new Timestamp(System.currentTimeMillis()));
-            }
+            } else return null;
         }
         return commentsRepo.save(c);
     }
