@@ -68,14 +68,15 @@ public class ArticlesController {
         return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
 
-    @PostMapping("/article/comment")
+    @PostMapping("/comment/add")
     public ResponseEntity<?> postComment(@RequestHeader Map<String, String> headers, @RequestBody CommentForm commentForm) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
         if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        if(commentForm.getArticleId() == null) return new ResponseEntity<>("Specify article id", HttpStatus.BAD_REQUEST);
+        if(commentForm.getId() == null) return new ResponseEntity<>("Specify article id", HttpStatus.BAD_REQUEST);
+        if(articlesService.getArticle(commentForm.getId()) == null)  return new ResponseEntity<>("Article with id " + commentForm.getId() + " doesn't exist", HttpStatus.BAD_REQUEST);
         if(commentForm.getComment() == null) return new ResponseEntity<>("Cannot add empty comment", HttpStatus.BAD_REQUEST);
-        Comment comment = new Comment(commentForm.getArticleId(), user.getId(), commentForm.getComment(), 0, new Timestamp(System.currentTimeMillis()), new Long[0]);
+        Comment comment = new Comment(commentForm.getId(), user.getId(), commentForm.getComment(), 0, new Timestamp(System.currentTimeMillis()), new Long[0]);
         Comment saved = articlesService.saveComment(comment);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
@@ -85,9 +86,9 @@ public class ArticlesController {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
         if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        Comment comment = new Comment();
-        if(commentForm.getCommentId() != null) comment.setId(commentForm.getCommentId());
-        else return new ResponseEntity<>("Comment id cannot be empty", HttpStatus.BAD_REQUEST);
+        if(commentForm.getId() == null) return new ResponseEntity<>("Specify comment id", HttpStatus.BAD_REQUEST);
+        Comment comment = articlesService.getComment(commentForm.getId());
+        if(comment == null) return new ResponseEntity<>("Comment with id " + commentForm.getId() + " doesn't exist", HttpStatus.BAD_REQUEST);
         if(commentForm.getComment() != null) comment.setComment(commentForm.getComment());
         Comment updated = articlesService.saveComment(comment);
         return new ResponseEntity<>(updated, HttpStatus.OK);
@@ -98,9 +99,11 @@ public class ArticlesController {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
         if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        Articles articles = new Articles();
-        if(articleForm.getId() != null)  articles.setId(articleForm.getId());
+        Articles articles;
+        if(articleForm.getId() != null)  articles = articlesService.getArticle(articleForm.getId());
         else return new ResponseEntity<>("Article id cannot be empty", HttpStatus.BAD_REQUEST);
+        if(articles == null) return new ResponseEntity<>("Article with id " + articleForm.getId() + " doesn't exist", HttpStatus.BAD_REQUEST);
+        if(user.getId() != articles.getOwner()) return new ResponseEntity<>("You are not the owner", HttpStatus.FORBIDDEN);
         if(articleForm.getContent() != null) articles.setContent(articleForm.getContent());
         if(articleForm.getTitle() != null) articles.setTitle(articleForm.getTitle());
         if(articleForm.getTags() != null) articles.setTags(articleForm.getTags());

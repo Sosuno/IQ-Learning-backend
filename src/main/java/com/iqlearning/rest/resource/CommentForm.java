@@ -3,9 +3,7 @@ package com.iqlearning.rest.resource;
 public class CommentForm {
 
     private String comment;
-    private Long articleId;
-    private Long commentId;
-
+    private Long id;
     public String getComment() {
         return comment;
     }
@@ -14,19 +12,12 @@ public class CommentForm {
         this.comment = comment;
     }
 
-    public Long getArticleId() {
-        return articleId;
+    public Long getId() {
+        return id;
     }
 
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(Long commentId) {
-        this.commentId = commentId;
-    }
 }
