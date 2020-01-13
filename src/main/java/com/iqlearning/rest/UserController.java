@@ -1,9 +1,8 @@
 package com.iqlearning.rest;
 
-import com.iqlearning.context.activities.AccountManagement;
+
 import com.iqlearning.database.entities.User;
-import com.iqlearning.database.service.interfaces.ISessionService;
-import com.iqlearning.database.service.interfaces.IUserService;
+import com.iqlearning.database.service.UserService;
 import com.iqlearning.database.utils.LoggedUser;
 import com.iqlearning.rest.resource.LoginForm;
 import com.iqlearning.rest.resource.UserForm;
@@ -30,17 +29,12 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private IUserService userService;
-    @Autowired
-    private ISessionService sessionService;
-
-    private AccountManagement acc;
-
+    private UserService userService;
 
     @PostMapping("/user/token")
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
-        acc = new AccountManagement(userService,sessionService);
-        LoggedUser user = acc.login(loginForm.getUsername(), loginForm.getPassword());
+
+        LoggedUser user = userService.login(loginForm.getUsername(), loginForm.getPassword());
         if(user == null) {
             return new ResponseEntity<>("Username not found", HttpStatus.FORBIDDEN);
         } else if(user.getId() == -1) {
@@ -52,8 +46,7 @@ public class UserController {
 
     @PostMapping("/user/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterForm registerForm) {
-        acc = new AccountManagement(userService,sessionService);
-        LoggedUser user = acc.register(registerForm.getUsername(),registerForm.getPassword(),registerForm.getEmail(),registerForm.getName(),registerForm.getSurname());
+        LoggedUser user = userService.register(registerForm.getUsername(),registerForm.getPassword(),registerForm.getEmail(),registerForm.getName(),registerForm.getSurname());
         if(user.getId() == -1) {
             return new ResponseEntity<>( "Username taken", HttpStatus.NOT_ACCEPTABLE);
         } else if(user.getId() == -2) {
@@ -64,20 +57,18 @@ public class UserController {
     @DeleteMapping("/user/logout")
     public ResponseEntity<?> logoutUser(@RequestHeader Map<String, String> headers) {
         String token = headers.get("authorization").split(" ")[1];
-        acc = new AccountManagement(userService,sessionService);
         User u = userService.getUserBySession(token);
         if (u.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        acc.logout(token);
-        if(sessionService.getSession(token) != null) {
+        userService.logout(token);
+        if(userService.getSession(token) != null) {
             return new ResponseEntity<>( "Logout unsuccessful", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>( "Logout successful", HttpStatus.OK);
     }
 
     @GetMapping("/user/fetch")
     public ResponseEntity<?> getUserByToken(@RequestHeader Map<String, String> headers) {
-        acc = new AccountManagement(userService,sessionService);
         String session = headers.get("authorization").split(" ")[1];
-        LoggedUser loggedUser = acc.loginWithSession(session);
+        LoggedUser loggedUser = userService.loginWithSession(session);
         if(loggedUser.getId() != -1) {
             return auth(loggedUser.getSessionID(),loggedUser);
         } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -87,8 +78,7 @@ public class UserController {
     @PostMapping("/user/update")
     public ResponseEntity<?> editUser(@RequestHeader Map<String, String> headers, @RequestBody UserForm userForm) {
         String token = headers.get("authorization").split(" ")[1];
-        acc = new AccountManagement(userService,sessionService);
-        LoggedUser user = acc.loginWithSession(token);
+        LoggedUser user = userService.loginWithSession(token);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         else {
             if(userForm.getUsername() != null) user.setUsername(userForm.getUsername());
@@ -101,7 +91,7 @@ public class UserController {
             if(userForm.getTwitter() != null) user.setTwitter(userForm.getTwitter());
             if(userForm.getReddit() != null) user.setReddit(userForm.getReddit());
             if(userForm.getYoutube() != null) user.setYoutube(userForm.getYoutube());
-            return new ResponseEntity<>( acc.updateUser(user), HttpStatus.OK);
+            return new ResponseEntity<>( userService.updateUser(user), HttpStatus.OK);
         }
     }
 

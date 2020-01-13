@@ -31,8 +31,6 @@ public class TestController {
     @Autowired
     private UserService userService;
     @Autowired
-    private SessionService sessionService;
-    @Autowired
     private SubjectService subjectService;
     @Autowired
     private QuestionService questionService;
@@ -116,7 +114,7 @@ public class TestController {
     public ResponseEntity<?> getTestsByUser(@RequestHeader Map<String, String> headers){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Test> testList = testService.getTestsByUser(user.getId());
@@ -131,7 +129,7 @@ public class TestController {
     public ResponseEntity<?> getTestsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         Subject subject = subjectService.getSubject(id);
@@ -148,7 +146,7 @@ public class TestController {
     public ResponseEntity<?> getTestById(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
 
@@ -162,7 +160,7 @@ public class TestController {
     @GetMapping("/tests/get/public")
     public ResponseEntity<?> getPublicQuestions(@RequestHeader Map<String, String> headers) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Test> testList = testService.getSharedTests();
@@ -176,7 +174,7 @@ public class TestController {
     @GetMapping("/tests/get/public/subject/{id}")
     public ResponseEntity<?> getPublicQuestionsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         Subject subject = subjectService.getSubject(id);
@@ -193,7 +191,7 @@ public class TestController {
     public ResponseEntity<?> getPrintableTestById(@RequestHeader Map<String, String> headers, @PathVariable Long id, @PathVariable Long groups) throws IOException {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         Test test = testService.getTest(id);

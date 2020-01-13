@@ -5,7 +5,6 @@ import com.iqlearning.database.entities.Question;
 import com.iqlearning.database.entities.Subject;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.QuestionService;
-import com.iqlearning.database.service.SessionService;
 import com.iqlearning.database.service.SubjectService;
 import com.iqlearning.database.service.UserService;
 import com.iqlearning.database.utils.FilledQuestion;
@@ -24,8 +23,6 @@ public class QuestionController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private SessionService sessionService;
     @Autowired
     private SubjectService subjectService;
     @Autowired
@@ -107,7 +104,7 @@ public class QuestionController {
     public ResponseEntity<?> getQuestionsByUser(@RequestHeader Map<String, String> headers){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Question> questionList = questionService.getAllUserQuestions(user.getId());
@@ -119,7 +116,7 @@ public class QuestionController {
     public ResponseEntity<?> getQuestionsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Question> questionList = questionService.getAllQuestionForSubjectOfUser(user.getId(),id);
@@ -131,7 +128,7 @@ public class QuestionController {
     public ResponseEntity<?> getQuestionById(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
 
@@ -147,7 +144,7 @@ public class QuestionController {
     @GetMapping("/subject/get/{id}")
     public ResponseEntity<?> getSubjectById(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         Subject subject = subjectService.getSubject(id);
@@ -158,7 +155,7 @@ public class QuestionController {
     @GetMapping("/subject/get")
     public ResponseEntity<?> getAllSubjects(@RequestHeader Map<String, String> headers){
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Subject> subjectList = subjectService.getAllSubjects();
@@ -168,7 +165,7 @@ public class QuestionController {
     @GetMapping("/answers/get/{id}")
     public ResponseEntity<?> getAnswersByQuestionId(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
-        if (sessionService.getSession(session) == null) {
+        if (userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         User user = userService.getUserBySession(session);
@@ -183,7 +180,7 @@ public class QuestionController {
     @GetMapping("/questions/get/public")
     public ResponseEntity<?> getPublicQuestions(@RequestHeader Map<String, String> headers) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Question> questionList = questionService.getAllSharedQuestions();
@@ -194,7 +191,7 @@ public class QuestionController {
     @GetMapping("/questions/get/public/user")
     public ResponseEntity<?> getPublicQuestionsByUser(@RequestHeader Map<String, String> headers) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         User user = userService.getUserBySession(session);
@@ -206,7 +203,7 @@ public class QuestionController {
     @GetMapping("/questions/get/public/subject/{id}")
     public ResponseEntity<?> getPublicQuestionsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         Subject subject = subjectService.getSubject(id);
@@ -219,7 +216,7 @@ public class QuestionController {
     @GetMapping("/questions/get/public/user/subject/{id}")
     public ResponseEntity<?> getPublicQuestionsByUserAndSubject(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         User user = userService.getUserBySession(session);
