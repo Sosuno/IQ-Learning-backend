@@ -10,6 +10,7 @@ import com.iqlearning.database.service.interfaces.IAnswerService;
 import com.iqlearning.database.service.interfaces.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -191,6 +192,7 @@ public class QuestionService implements IQuestionService, IAnswerService {
         answerRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public void deleteAnswers(Long id) {
         answerRepository.deleteAllByQuestionId(id);
