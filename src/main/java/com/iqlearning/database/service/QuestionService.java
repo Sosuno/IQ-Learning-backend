@@ -20,6 +20,7 @@ import java.util.Optional;
 @Service
 public class QuestionService implements IQuestionService, IAnswerService {
 
+    @Autowired
     private SubjectService subjectService;
     @Autowired
     private QuestionRepository questionRepository;
@@ -192,12 +193,14 @@ public class QuestionService implements IQuestionService, IAnswerService {
         answerRepository.deleteById(id);
     }
 
-    @Transactional
+
     @Override
+    @Transactional
     public void deleteAnswers(Long id) {
         answerRepository.deleteAllByQuestionId(id);
     }
 
+    @Transactional
     public Question addQuestion(FilledQuestion q) {
         Question toDbQ = new Question(q.getOwner(),q.getSubject().getId(),q.getQuestion(),q.isChoiceTest(),q.isShareable(), q.getCreated(), q.getLastEdited());
         toDbQ.setLastEdited(new Timestamp(System.currentTimeMillis()));
