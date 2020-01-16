@@ -46,12 +46,7 @@ public class ChatService implements IChatService{
         c.setSender(m.getSender());
         c.setSentOn(new Timestamp(System.currentTimeMillis()));
         c = repo.save(c);
-        Message message = new Message(c.getMessage());
-        message.setSender(c.getSender());
-        message.setSent(new Timestamp(System.currentTimeMillis()));
-        if(c.getUser1().equals(c.getSender())) message.setRecipient(c.getUser2());
-        else message.setRecipient(c.getUser1());
-        return message;
+        return new Message(c);
     }
 
     @Override
