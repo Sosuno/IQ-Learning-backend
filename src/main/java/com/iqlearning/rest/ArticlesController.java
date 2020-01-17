@@ -2,6 +2,7 @@ package com.iqlearning.rest;
 
 import com.iqlearning.database.entities.Articles;
 import com.iqlearning.database.entities.Comment;
+import com.iqlearning.database.entities.Tag;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.interfaces.IArticlesService;
 import com.iqlearning.database.service.interfaces.IUserService;
@@ -128,6 +129,15 @@ public class ArticlesController {
         if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         Comment upvoted = articlesService.upvoteComment(id,user.getId());
         return new ResponseEntity<>(upvoted, HttpStatus.OK);
+    }
+
+    @GetMapping("/tags/get")
+    public ResponseEntity<?> getAllTags(@RequestHeader Map<String, String> headers) {
+        String session = headers.get("authorization").split(" ")[1];
+        User user = userService.getUserBySession(session);
+        if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+        Iterable<Tag> tagList = articlesService.getTags();
+        return new ResponseEntity<>(tagList,HttpStatus.OK);
     }
 
 
