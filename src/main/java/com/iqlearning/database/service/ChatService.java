@@ -8,6 +8,7 @@ import com.iqlearning.database.repository.ConversationRepository;
 import com.iqlearning.database.repository.UserRepository;
 import com.iqlearning.database.service.interfaces.IChatService;
 import com.iqlearning.database.service.interfaces.IConversationService;
+import com.iqlearning.database.utils.ChatUser;
 import com.iqlearning.database.utils.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,16 +92,16 @@ public class ChatService implements IChatService, IConversationService{
     }
 
     @Override
-    public HashMap<Long,String> getAllUserConversation(Long userId) {
+    public HashMap<Long,ChatUser> getAllUserConversation(Long userId) {
         List<Conversation> convos = conversationRepository.getUserConversations(userId);
         Optional<User> o;
-        HashMap<Long,String> convosMap = new HashMap<>();
+        HashMap<Long,ChatUser> convosMap = new HashMap<>();
 
         for(Conversation l: convos) {
             if(userId.equals(l.getUser1())) o = userRepository.findById(l.getUser2());
             else o = userRepository.findById(l.getUser1());
                 if(o.isPresent()) {
-                    convosMap.put(l.getId(), o.get().getUsername());
+                    convosMap.put(l.getId(), new ChatUser(o.get().getId(),o.get().getUsername(),o.get().getAvatar()));
                 }
         }
         return convosMap;

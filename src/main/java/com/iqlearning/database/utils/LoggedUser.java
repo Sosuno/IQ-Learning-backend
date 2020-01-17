@@ -20,12 +20,12 @@ public class LoggedUser {
     private String youtube;
     private String email;
     private String sessionID;
-    private HashMap<Long,String> conversations;
+    private HashMap<Long,ChatUser> conversations;
 
     public LoggedUser() {
 
     }
-    public LoggedUser(User user, String sessionID, HashMap<Long,String> conversations) {
+    public LoggedUser(User user, String sessionID, HashMap<Long,ChatUser> conversations) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.name = user.getName();
@@ -137,11 +137,11 @@ public class LoggedUser {
         this.youtube = youtube;
     }
 
-    public HashMap<Long, String> getConversations() {
+    public HashMap<Long, ChatUser> getConversations() {
         return conversations;
     }
 
-    public void setConversations(HashMap<Long, String> conversations) {
+    public void setConversations(HashMap<Long, ChatUser> conversations) {
         this.conversations = conversations;
     }
 }
