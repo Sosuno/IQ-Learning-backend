@@ -32,10 +32,12 @@ public class Articles {
     private Long[] tags;
     @Column(name="image")
     private byte[] image;
+    @Column(name = "description")
+    private String description;
 
     public Articles() {}
 
-    public Articles(Long owner, String content,String title, int upvotes, Timestamp createdOn, Long[] upvotedBy, Long[] tags) {
+    public Articles(Long owner, String content,String title, int upvotes, Timestamp createdOn, Long[] upvotedBy, Long[] tags, String description) {
         this.owner = owner;
         this.content = content;
         this.upvotes = upvotes;
@@ -45,6 +47,7 @@ public class Articles {
         this.tags = tags;
         image = null;
         this.title = title;
+        this.description = description;
     }
 
     public Articles(Long owner, String content, int upvotes, Timestamp createdOn) {
@@ -134,5 +137,13 @@ public class Articles {
 
     public void setEditedOn(Timestamp editedOn) {
         this.editedOn = editedOn;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

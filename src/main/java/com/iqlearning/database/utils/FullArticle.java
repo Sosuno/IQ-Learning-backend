@@ -17,6 +17,7 @@ public class FullArticle {
     private Long[] upvotedBy;
     private Tag[] tags;
     private byte[] image;
+    private String description;
 
     public FullArticle(Articles a, Owner owner, Tag[] tags){
         this.id = a.getId();
@@ -28,6 +29,7 @@ public class FullArticle {
         this.image = a.getImage();
         this.title = a.getTitle();
         this.tags = tags;
+        this.description = a.getDescription();
     }
     public FullArticle(){}
 
@@ -100,5 +102,13 @@ public class FullArticle {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

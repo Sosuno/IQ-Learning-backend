@@ -115,6 +115,7 @@ CREATE TABLE articles(
             tags_id BIGINT DEFAULT null,
             tags BIGINT ARRAY DEFAULT null,
             image bytea DEFAULT null,
+            description TEXT DEFAULT null,
             FOREIGN KEY (owner) REFERENCES users(id)
 );
 

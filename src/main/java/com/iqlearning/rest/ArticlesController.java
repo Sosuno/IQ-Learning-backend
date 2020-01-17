@@ -35,7 +35,7 @@ public class ArticlesController {
         if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         if(articleForm.getContent() == null) return new ResponseEntity<>("Article content is empty", HttpStatus.BAD_REQUEST);
         if(articleForm.getTitle() == null) return new ResponseEntity<>("Article title is empty", HttpStatus.BAD_REQUEST);
-        Articles articles = new Articles(user.getId(), articleForm.getContent(), articleForm.getTitle(), 0, new Timestamp(System.currentTimeMillis()), new Long[0], articleForm.getTags());
+        Articles articles = new Articles(user.getId(), articleForm.getContent(), articleForm.getTitle(), 0, new Timestamp(System.currentTimeMillis()), new Long[0], articleForm.getTags(), articleForm.getDescription());
         //if(articleForm.getImage() != null) articles.setImage(articleForm.getImage());
         Articles saved = articlesService.saveArticle(articles);
         return new ResponseEntity<>(saved, HttpStatus.OK);
