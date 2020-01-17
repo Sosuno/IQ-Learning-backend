@@ -23,6 +23,7 @@ public class ChatController {
     @Autowired
     private IChatService chatService;
 
+    /*
     @PutMapping("/chat/send")
     public ResponseEntity<?> sendMessage(@RequestHeader Map<String, String> headers, @RequestBody MessageForm messageForm) {
         String session = headers.get("authorization").split(" ")[1];
@@ -34,14 +35,15 @@ public class ChatController {
         Message sentMessage = chatService.sendMessage(message);
         return new ResponseEntity<>(sentMessage, HttpStatus.OK);
     }
-
+*/
     @GetMapping("/chat/get/{id}")
     public ResponseEntity<?> getMessages(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
         if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         if (userService.getUser(id) == null) return new ResponseEntity<>("User with id" + id + "doesn't exist", HttpStatus.BAD_REQUEST);
-        List<Message> chatHistory = chatService.getConversationHistory(user.getId(), id);
+        List<Message> chatHistory = chatService.getConversationHistory(id);
         return new ResponseEntity<>(chatHistory, HttpStatus.OK);
     }
+
 }

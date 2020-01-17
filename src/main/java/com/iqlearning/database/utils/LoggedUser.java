@@ -3,6 +3,9 @@ package com.iqlearning.database.utils;
 
 import com.iqlearning.database.entities.User;
 
+import java.util.HashMap;
+import java.util.List;
+
 public class LoggedUser {
 
     private Long id;
@@ -17,11 +20,12 @@ public class LoggedUser {
     private String youtube;
     private String email;
     private String sessionID;
+    private HashMap<Long,String> conversations;
 
     public LoggedUser() {
 
     }
-    public LoggedUser(User user, String sessionID) {
+    public LoggedUser(User user, String sessionID, HashMap<Long,String> conversations) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.name = user.getName();
@@ -34,6 +38,7 @@ public class LoggedUser {
         this.twitter = user.getTwitter();
         this.reddit = user.getReddit();
         this.youtube = user.getYoutube();
+        this.conversations = conversations;
     }
 
     public Long getId() {
@@ -130,5 +135,13 @@ public class LoggedUser {
 
     public void setYoutube(String youtube) {
         this.youtube = youtube;
+    }
+
+    public HashMap<Long, String> getConversations() {
+        return conversations;
+    }
+
+    public void setConversations(HashMap<Long, String> conversations) {
+        this.conversations = conversations;
     }
 }

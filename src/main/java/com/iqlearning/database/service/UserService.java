@@ -6,6 +6,7 @@ import com.iqlearning.database.entities.Session;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.repository.SessionRepository;
 import com.iqlearning.database.repository.UserRepository;
+import com.iqlearning.database.service.interfaces.IConversationService;
 import com.iqlearning.database.service.interfaces.ISessionService;
 import com.iqlearning.database.service.interfaces.IUserService;
 import com.iqlearning.database.utils.LoggedUser;
@@ -22,6 +23,8 @@ import java.util.UUID;
 @Service
 public class UserService implements IUserService,ISessionService {
 
+    @Autowired
+    private IConversationService convos;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -136,6 +139,7 @@ public class UserService implements IUserService,ISessionService {
      *
      */
     public LoggedUser login(String username, String password) {
+
         user = getUserByUsername(username);
         if(user.getId() == -1) return null;
         if(user.getLoginTries() < 3) {
@@ -152,7 +156,7 @@ public class UserService implements IUserService,ISessionService {
                 s = getSessionByUser(user.getId());
                 if(s!=null)deleteSession(s.getSessionID());
                 s = createSession(user.getId());
-                loggedUser = new LoggedUser(user,s.getSessionID());
+                loggedUser = new LoggedUser(user,s.getSessionID(),convos.getAllUserConversation(user.getId()));
                 changeStatus(2);
             }
         }else {
@@ -164,7 +168,7 @@ public class UserService implements IUserService,ISessionService {
 
     public LoggedUser loginWithSession(String sessionId) {
         user = getUserBySession(sessionId);
-        loggedUser = new LoggedUser(user, sessionId);
+        loggedUser = new LoggedUser(user, sessionId,convos.getAllUserConversation(user.getId()));
         return loggedUser;
     }
 
@@ -197,7 +201,7 @@ public class UserService implements IUserService,ISessionService {
         user = new User(name,surname,username,hash.passwordEncoder().encode(password),email,2, new Timestamp(System.currentTimeMillis()), 0);
         user = saveUser(user);
         s = createSession(user.getId());
-        loggedUser = new LoggedUser(user,s.getSessionID());
+        loggedUser = new LoggedUser(user,s.getSessionID(),convos.getAllUserConversation(user.getId()));
 
         return loggedUser;
     }
@@ -205,7 +209,7 @@ public class UserService implements IUserService,ISessionService {
     public LoggedUser changePassword(String session, String newPassword) {
         user = getUserBySession(session);
         user.setPassword(hash.passwordEncoder().encode(newPassword));
-        return new LoggedUser(saveUser(user), session);
+        return new LoggedUser(saveUser(user), session,convos.getAllUserConversation(user.getId()));
     }
 
     public LoggedUser updateUser(LoggedUser loggedUser){
@@ -220,7 +224,7 @@ public class UserService implements IUserService,ISessionService {
         if(user.getReddit() != loggedUser.getReddit() && loggedUser.getReddit() != null)user.setReddit(loggedUser.getReddit());
         if(user.getYoutube() != (loggedUser.getYoutube())&& loggedUser.getYoutube() != null)user.setYoutube(loggedUser.getYoutube());
 
-        return new LoggedUser(saveUser(user), loggedUser.getSessionID());
+        return new LoggedUser(saveUser(user), loggedUser.getSessionID(),convos.getAllUserConversation(user.getId()));
     }
 
     @PostConstruct
