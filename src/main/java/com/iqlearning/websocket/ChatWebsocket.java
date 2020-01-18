@@ -9,14 +9,17 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @Controller
+@CrossOrigin(origins=("http://localhost:3000"))
 public class ChatWebsocket {
 
     @Autowired
     private ChatService chatService;
 
+    @CrossOrigin(origins=("http://localhost:3000"))
     @MessageMapping("/sendMessage/{conversationId}")
     @SendTo("/topic/{conversationId}")
     public Message sendMessage(@DestinationVariable("conversationId") Long conversationId, MessageForm message) throws Exception {
