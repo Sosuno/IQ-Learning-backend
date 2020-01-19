@@ -38,7 +38,7 @@ public class ChatWebsocket {
     }
     @CrossOrigin(origins=("http://localhost:3000"))
     @MessageMapping("/startConversation/{userId}")
-    @SendTo("/user/{userId}")
+    @SendTo("topic/user/{userId}")
     public ResponseEntity<?> startConversation(@DestinationVariable("userId") Long conversationId, MessageForm message) throws Exception {
         Message m = new Message(message.getMessage(),message.getSender(), message.getRecipient());
         m.setMessage(message.getMessage());
