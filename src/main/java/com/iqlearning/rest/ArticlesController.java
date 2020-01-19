@@ -43,10 +43,7 @@ public class ArticlesController {
     }
 
     @GetMapping("/article/get")
-    public ResponseEntity<?> getAllArticles(@RequestHeader Map<String, String> headers) {
-        String session = headers.get("authorization").split(" ")[1];
-        User user = userService.getUserBySession(session);
-        if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> getAllArticles() {
         List<FullArticle> articleList = articlesService.getAll();
         return new ResponseEntity<>(articleList, HttpStatus.OK);
     }
