@@ -51,10 +51,7 @@ public class ChatService implements IChatService, IConversationService{
     public Message sendMessage(Message m, Long convoId) {
         Conversation conversation;
         if(convoId == null) {
-            System.out.println("covoId: " + convoId);
             conversation = conversationRepository.checkIfConvoExists(m.getSender(),m.getRecipient());
-            System.out.println("almost in if");
-            System.out.println("show id: " + conversation.getId());
             if(conversation == null) {
                 System.out.println("In if");
                 conversation = new Conversation(m.getSender(), m.getRecipient());
