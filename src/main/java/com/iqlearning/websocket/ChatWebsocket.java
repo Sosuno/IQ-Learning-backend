@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @CrossOrigin(origins=("http://localhost:3000"))
 public class ChatWebsocket {
 
+
     @Autowired
     private ChatService chatService;
 
@@ -39,11 +40,12 @@ public class ChatWebsocket {
     @CrossOrigin(origins=("http://localhost:3000"))
     @MessageMapping("/startConversation/{userId}")
     @SendTo("topic/user/{userId}")
-    public ResponseEntity<?> startConversation(@DestinationVariable("userId") Long conversationId, MessageForm message) throws Exception {
+    public ResponseEntity<?> startConversation(@DestinationVariable("userId") Long userId, MessageForm message) throws Exception {
         Message m = new Message(message.getMessage(),message.getSender(), message.getRecipient());
         m.setMessage(message.getMessage());
         m.setRecipient(message.getRecipient());
-        Message mes = chatService.sendMessage(m,conversationId);
+        Message mes = chatService.sendMessage(m,null);
+        System.out.println(mes.toString());
 
         return new ResponseEntity<Object>(mes, HttpStatus.OK);
 
