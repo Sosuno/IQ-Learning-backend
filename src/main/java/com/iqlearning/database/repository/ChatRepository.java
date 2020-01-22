@@ -13,9 +13,9 @@ import java.util.List;
 @Repository
 public interface ChatRepository extends CrudRepository<Chat,Long> {
 
-    List<Chat> getAllByUser1AndUser2OrderBySentOnDesc(Long user1, Long user2);
+    //List<Chat> getAllByUser1AndUser2OrderBySentOnDesc(Long user1, Long user2);
 
-    int countAllByUser1AndUser2(Long id1, Long id2);
+    List<Chat> getAllByConversationOrderBySentOn(Long convoId);
 
     @Query("SELECT c FROM Chat c WHERE NOT(sender = :user) AND (user1 = :user OR user2 = :user) AND read = false")
     List<Chat> getAllUnread(@Param("user") Long user);

@@ -10,10 +10,8 @@ public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "user1")
-    private Long user1;
-    @Column(name = "user2")
-    private Long user2;
+    @Column(name = "conversation")
+    private Long conversation;
     @Column(name = "sender")
     private Long sender;
     @Column(name = "message")
@@ -25,9 +23,8 @@ public class Chat {
 
     public Chat() {}
 
-    public Chat(Long user1, Long user2, Long sender, String message, Timestamp sentOn, boolean read) {
-        this.user1 = user1;
-        this.user2 = user2;
+    public Chat(Long conversation, Long sender, String message, Timestamp sentOn, boolean read) {
+        this.conversation = conversation;
         this.sender = sender;
         this.message = message;
         this.sentOn = sentOn;
@@ -40,22 +37,6 @@ public class Chat {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUser1() {
-        return user1;
-    }
-
-    public void setUser1(Long user1) {
-        this.user1 = user1;
-    }
-
-    public Long getUser2() {
-        return user2;
-    }
-
-    public void setUser2(Long user2) {
-        this.user2 = user2;
     }
 
     public Long getSender() {
@@ -88,5 +69,13 @@ public class Chat {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public Long getConversation() {
+        return conversation;
+    }
+
+    public void setConversation(Long conversation) {
+        this.conversation = conversation;
     }
 }
