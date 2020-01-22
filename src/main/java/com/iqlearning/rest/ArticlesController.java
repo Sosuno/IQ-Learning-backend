@@ -2,6 +2,7 @@ package com.iqlearning.rest;
 
 import com.iqlearning.database.entities.Articles;
 import com.iqlearning.database.entities.Comment;
+import com.iqlearning.database.entities.Tag;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.interfaces.IArticlesService;
 import com.iqlearning.database.service.interfaces.IUserService;
@@ -36,16 +37,13 @@ public class ArticlesController {
         if(articleForm.getContent() == null) return new ResponseEntity<>("Article content is empty", HttpStatus.BAD_REQUEST);
         if(articleForm.getTitle() == null) return new ResponseEntity<>("Article title is empty", HttpStatus.BAD_REQUEST);
         Articles articles = new Articles(user.getId(), articleForm.getContent(), articleForm.getTitle(), 0, new Timestamp(System.currentTimeMillis()), new Long[0], articleForm.getTags(), articleForm.getDescription());
-        //if(articleForm.getImage() != null) articles.setImage(articleForm.getImage());
+        if(articleForm.getImage() != null) articles.setImage(articleForm.getImage());
         Articles saved = articlesService.saveArticle(articles);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
     @GetMapping("/article/get")
-    public ResponseEntity<?> getAllArticles(@RequestHeader Map<String, String> headers) {
-        String session = headers.get("authorization").split(" ")[1];
-        User user = userService.getUserBySession(session);
-        if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> getAllArticles() {
         List<FullArticle> articleList = articlesService.getAll();
         return new ResponseEntity<>(articleList, HttpStatus.OK);
     }
@@ -107,7 +105,7 @@ public class ArticlesController {
         if(articleForm.getContent() != null) articles.setContent(articleForm.getContent());
         if(articleForm.getTitle() != null) articles.setTitle(articleForm.getTitle());
         if(articleForm.getTags() != null) articles.setTags(articleForm.getTags());
-        //if(articleForm.getImage() != null) articles.setImage(articleForm.getImage());
+        if(articleForm.getImage() != null) articles.setImage(articleForm.getImage());
         Articles saved = articlesService.saveArticle(articles);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
@@ -128,6 +126,15 @@ public class ArticlesController {
         if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
         Comment upvoted = articlesService.upvoteComment(id,user.getId());
         return new ResponseEntity<>(upvoted, HttpStatus.OK);
+    }
+
+    @GetMapping("/tags/get")
+    public ResponseEntity<?> getAllTags(@RequestHeader Map<String, String> headers) {
+        String session = headers.get("authorization").split(" ")[1];
+        User user = userService.getUserBySession(session);
+        if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+        Iterable<Tag> tagList = articlesService.getTags();
+        return new ResponseEntity<>(tagList,HttpStatus.OK);
     }
 
 
