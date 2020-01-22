@@ -38,7 +38,8 @@ public class LoggedUser {
         this.twitter = user.getTwitter();
         this.reddit = user.getReddit();
         this.youtube = user.getYoutube();
-        this.conversations = conversations;
+        if(conversations.size() > 0) this.conversations = conversations;
+        else this.conversations = null;
     }
 
     public Long getId() {
