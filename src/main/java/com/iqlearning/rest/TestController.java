@@ -53,7 +53,7 @@ public class TestController {
                 return new ResponseEntity<>("Question " + id + " is not of the same subject as test", HttpStatus.BAD_REQUEST);
             }
         }
-        Test newTest = new Test(user.getId(), testForm.getSubjectId(), questionList, testForm.getShareable(), 0, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+        Test newTest = new Test(user.getId(), testForm.getSubjectId(), questionList, testForm.getShareable(), 0, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), testForm.getTitle());
         Test addedTest = testService.saveTest(newTest);
         if(addedTest != null) {
             return new ResponseEntity<>(addedTest, HttpStatus.OK);
