@@ -46,7 +46,7 @@ public class ResultsController {
                 return new ResponseEntity<>("Test and question subjects don't match", HttpStatus.BAD_REQUEST);
             }
             if(r.getStudentId() == null)  {
-                return  new ResponseEntity<>("Student id for question " + r.getQuestionId() + " is null", HttpStatus.BAD_REQUEST);
+                r.setStudentId(0L);
             }
             TestResults testResults = new TestResults(resultForm.getTestId(),r.getQuestionId(), r.getPoints(), user.getId(), r.getStudentId(), new Timestamp(System.currentTimeMillis()));
             testResultsList.add(testResults);
