@@ -26,18 +26,21 @@ public class Test {
     private Timestamp created = new Timestamp(System.currentTimeMillis());
     @Column(name = "last_edited")
     private Timestamp lastEdited = new Timestamp(System.currentTimeMillis());
+    @Column(name = "title")
+    private String title;
     @Column(name = "downloads")
     private int downloads;
 
-    public Test(Long owner, Long subject, Long[] questions, boolean shareable, int downloads) {
+    public Test(Long owner, Long subject, Long[] questions, boolean shareable, int downloads,String title) {
         this.owner = owner;
         this.subject = subject;
         this.questions = questions;
         this.shareable = shareable;
         this.downloads = downloads;
+        this.title = title;
     }
 
-    public Test(Long owner, Long subject, Long[] questions, boolean shareable, int downloads, Timestamp created, Timestamp lastEdited) {
+    public Test(Long owner, Long subject, Long[] questions, boolean shareable, int downloads, Timestamp created, Timestamp lastEdited, String title) {
         this.owner = owner;
         this.subject = subject;
         this.questions = questions;
@@ -45,6 +48,7 @@ public class Test {
         this.downloads = downloads;
         this.created = created;
         this.lastEdited = lastEdited;
+        this.title = title;
     }
 
     public Test() {
@@ -113,5 +117,13 @@ public class Test {
 
     public void setDownloads(int downloads) {
         this.downloads = downloads;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

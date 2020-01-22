@@ -72,6 +72,7 @@ CREATE TABLE tests(
                   shareable BOOLEAN NOT NULL,
                   created TIMESTAMP DEFAULT now(),
                   last_edited TIMESTAMP DEFAULT now(),
+                  title TEXT,
                   downloads INT DEFAULT 0,
                   FOREIGN KEY (owner) REFERENCES users(id),
                   FOREIGN KEY (subject) REFERENCES subjects(id)

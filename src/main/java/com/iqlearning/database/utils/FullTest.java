@@ -14,6 +14,7 @@ public class FullTest {
     private boolean shareable;
     private Timestamp created;
     private Timestamp lastEdited;
+    private String title;
     private int downloads;
 
 
@@ -86,5 +87,6 @@ public class FullTest {
         this.created = t.getCreated();
         this.lastEdited = t.getLastEdited();
         this.downloads = t.getDownloads();
+        this.title = t.getTitle();
     }
 }
