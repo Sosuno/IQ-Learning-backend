@@ -55,13 +55,14 @@ public class TestService implements ITestService, ITestResults{
 
     @Override
     public void deleteTest(Test test) {
-        testRepository.delete(test);
-
+        test.setOwner(1L);
+        test.setShareable(false);
+        testRepository.save(test);
     }
 
     @Override
     public void deleteTest(Long id) {
-        testRepository.deleteById(id);
+        deleteTest(getTest(id));
     }
 
     @Override
