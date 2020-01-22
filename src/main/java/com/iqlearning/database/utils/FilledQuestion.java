@@ -18,6 +18,7 @@ public class FilledQuestion {
     private Timestamp created;
     private Timestamp lastEdited;
     private List<Answer> answers;
+    private int correctAnswers;
 
     public FilledQuestion(){
 
@@ -31,6 +32,7 @@ public class FilledQuestion {
         shareable = q.isShareable();
         created = q.getCreated();
         lastEdited = q.getLastEdited();
+        correctAnswers = 0;
     }
 
     public Timestamp getCreated() {
@@ -102,6 +104,17 @@ public class FilledQuestion {
     }
 
     public void setAnswers(List<Answer> answers) {
+        for (Answer a: answers) {
+            if(a.isCorrect()) correctAnswers++;
+        }
         this.answers = answers;
+    }
+
+    public int getCorrectAnswers() {
+        return correctAnswers;
+    }
+
+    public void setCorrectAnswers(int correctAnswers) {
+        this.correctAnswers = correctAnswers;
     }
 }
