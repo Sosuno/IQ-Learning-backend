@@ -89,4 +89,16 @@ public class FullTest {
         this.downloads = t.getDownloads();
         this.title = t.getTitle();
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }
