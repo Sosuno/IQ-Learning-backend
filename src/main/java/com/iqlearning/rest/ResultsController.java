@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +45,10 @@ public class ResultsController {
             if(testService.getTest(resultForm.getTestId()).getSubject() != questionService.get(r.getQuestionId()).getSubject()) {
                 return new ResponseEntity<>("Test and question subjects don't match", HttpStatus.BAD_REQUEST);
             }
-            if(!testResultsService.getQuestionResults(r.getQuestionId(), user.getId()).isEmpty())  {
-                return  new ResponseEntity<>("Results for question " + r.getQuestionId() + " already exist", HttpStatus.BAD_REQUEST);
+            if(r.getStudentId() == null)  {
+                return  new ResponseEntity<>("Student id for question " + r.getQuestionId() + " is null", HttpStatus.BAD_REQUEST);
             }
-            TestResults testResults = new TestResults(resultForm.getTestId(),r.getQuestionId(), r.getPoints(),user.getId());
+            TestResults testResults = new TestResults(resultForm.getTestId(),r.getQuestionId(), r.getPoints(), user.getId(), r.getStudentId(), new Timestamp(System.currentTimeMillis()));
             testResultsList.add(testResults);
         }
         for(TestResults t : testResultsList) {

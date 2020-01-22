@@ -152,7 +152,7 @@ public class TestController {
 
         Test test = testService.getTest(id);
         if(test == null) return new ResponseEntity<>("Test not found", HttpStatus.BAD_REQUEST);
-        if(test.getOwner() != user.getId()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
+        if(test.getOwner() != user.getId()  && !test.isShareable()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
         FullTest fullTest = testFiller(test);
         return new ResponseEntity<>(fullTest, HttpStatus.OK);
     }
@@ -196,7 +196,7 @@ public class TestController {
         }
         Test test = testService.getTest(id);
         if(test == null) return new ResponseEntity<>("Test not found", HttpStatus.BAD_REQUEST);
-        if(test.getOwner() != user.getId()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
+        if(test.getOwner() != user.getId() && !test.isShareable()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
         if(groups<1 || groups>4) return new ResponseEntity<>("You must specify a number of groups that is between 1 and 4", HttpStatus.BAD_REQUEST);
         FullTest fullTest = testFiller(test);
         List<FilledQuestion> filledQuestionList = fullTest.getQuestions();
