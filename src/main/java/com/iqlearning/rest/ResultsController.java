@@ -6,6 +6,7 @@ import com.iqlearning.database.entities.TestResults;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.TestService;
 import com.iqlearning.database.service.interfaces.*;
+import com.iqlearning.database.utils.QuestionResult;
 import com.iqlearning.rest.resource.ResultForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -155,5 +156,21 @@ public class ResultsController {
         return new ResponseEntity<>(savedTestResultsList, HttpStatus.OK);
     }
 
+    @GetMapping("/results/get/last")
+    public ResponseEntity<?> getLastUserResults(@RequestHeader Map<String, String> headers){
+        String session = headers.get("authorization").split(" ")[1];
+        User user = userService.getUserBySession(session);
+        if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+        List<TestResults> testResultsList = testResultsService.getRandomResultsByOwner(user.getId(), 10);
+        List<QuestionResult> questionResultList = new ArrayList<>();
+        for(TestResults t : testResultsList) {
+            Question q = questionService.get(t.getQuestionId());
+            QuestionResult questionResult = new QuestionResult();
+            questionResult.setText(q.getQuestion());
+            questionResult.setResult(t.getPoints());
+            questionResultList.add(questionResult);
+        }
+        return new ResponseEntity<>(questionResultList, HttpStatus.OK);
+    }
 
 }
