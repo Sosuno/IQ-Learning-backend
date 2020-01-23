@@ -14,4 +14,5 @@ public interface TestResultsPagingRepository extends PagingAndSortingRepository<
     List<TestResults> findAllByQuestionIdAndResultsOwnerOrderByCreatedDesc(Long id,Long owner, Pageable pageable);
     List<TestResults> findAllByTestIdOrderByCreatedDesc(Long id, Pageable pageable);
     List<TestResults> findAllByQuestionIdOrderByCreatedDesc(Long id, Pageable pageable);
+    List<TestResults> findAllByResultsOwnerOrderByCreatedDesc(Long id, Pageable pageable);
 }

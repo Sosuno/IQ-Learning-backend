@@ -126,4 +126,12 @@ public class TestService implements ITestService, ITestResults{
     public List<TestResults> getQuestionResultsByOwner(Long questionId, Long userId, int limit) {
         return testResultsPagingRepository.findAllByQuestionIdAndResultsOwnerOrderByCreatedDesc(questionId,userId, new PageRequest(0,limit));
     }
+
+    @Override
+    public List<TestResults> getRandomResultsByOwner(Long userId, int limit) {
+        return testResultsPagingRepository.findAllByResultsOwnerOrderByCreatedDesc(userId, new PageRequest(0,limit));
+    }
+
+
+
 }

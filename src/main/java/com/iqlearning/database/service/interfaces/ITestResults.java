@@ -23,4 +23,6 @@ public interface ITestResults {
     List<TestResults> getQuestionResults(Long questionId, int limit);
     List<TestResults> getQuestionResultsByOwner(Long questionId, Long userId, int limit);
 
+    List<TestResults> getRandomResultsByOwner(Long userId, int limit);
+
 }
