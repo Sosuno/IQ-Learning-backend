@@ -4,12 +4,15 @@ import com.iqlearning.database.entities.Test;
 import com.iqlearning.database.entities.TestResults;
 import com.iqlearning.database.repository.TestRepository;
 import com.iqlearning.database.repository.TestResultsRepository;
+import com.iqlearning.database.repository.TestResultsPagingRepository;
 import com.iqlearning.database.service.interfaces.ITestResults;
 import com.iqlearning.database.service.interfaces.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +23,9 @@ public class TestService implements ITestService, ITestResults{
     TestRepository testRepository;
     @Autowired
     TestResultsRepository resultsRepository;
+
+    @Autowired
+    TestResultsPagingRepository testResultsPagingRepository;
 
     @Override
     public Test getTest(Long id) {
@@ -99,6 +105,25 @@ public class TestService implements ITestService, ITestResults{
     @Override
     public void deleteTestResults(Long id) {
         resultsRepository.deleteById(id);
+    }
 
+    @Override
+    public List<TestResults> getAllTestResults(Long id, int limit) {
+        return testResultsPagingRepository.findAllByTestIdOrderByCreatedDesc(id,new PageRequest(0,limit));
+    }
+
+    @Override
+    public List<TestResults> getTestResultsByOwner(Long testId, Long userId, int limit) {
+        return testResultsPagingRepository.findAllByTestIdAndResultsOwnerOrderByCreatedDesc(testId,userId,new PageRequest(0,limit));
+    }
+
+    @Override
+    public List<TestResults> getQuestionResults(Long questionId, int limit) {
+        return testResultsPagingRepository.findAllByQuestionIdOrderByCreatedDesc(questionId, new PageRequest(0,limit));
+    }
+
+    @Override
+    public List<TestResults> getQuestionResultsByOwner(Long questionId, Long userId, int limit) {
+        return testResultsPagingRepository.findAllByQuestionIdAndResultsOwnerOrderByCreatedDesc(questionId,userId, new PageRequest(0,limit));
     }
 }

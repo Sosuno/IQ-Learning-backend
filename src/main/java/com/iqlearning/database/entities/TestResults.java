@@ -5,6 +5,18 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "tests_results")
+@NamedStoredProcedureQueries({
+        @NamedStoredProcedureQuery(name = "getLimitedTestResults",
+
+                procedureName = "public.getLimitedTestResults",
+                parameters = {
+
+                        @StoredProcedureParameter(mode = ParameterMode.IN, name = "testId", type = Long.class),
+                        @StoredProcedureParameter(mode = ParameterMode.IN, name = "limiter", type = int.class),
+                        @StoredProcedureParameter(mode = ParameterMode.OUT, name = "tests_results", type = TestResults.class)
+                })
+
+})
 public class TestResults {
 
     @Id
