@@ -58,10 +58,7 @@ public class ArticlesController {
     }
 
     @GetMapping("/article/get/comments/{id}")
-    public ResponseEntity<?> getArticleComments(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
-        String session = headers.get("authorization").split(" ")[1];
-        User user = userService.getUserBySession(session);
-        if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> getArticleComments(@PathVariable Long id) {
         List<ArticleComment> commentList = articlesService.getArticleComments(id);
         return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
@@ -129,10 +126,7 @@ public class ArticlesController {
     }
 
     @GetMapping("/tags/get")
-    public ResponseEntity<?> getAllTags(@RequestHeader Map<String, String> headers) {
-        String session = headers.get("authorization").split(" ")[1];
-        User user = userService.getUserBySession(session);
-        if (user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> getAllTags() {
         Iterable<Tag> tagList = articlesService.getTags();
         return new ResponseEntity<>(tagList,HttpStatus.OK);
     }

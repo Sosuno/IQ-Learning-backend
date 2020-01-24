@@ -122,7 +122,6 @@ CREATE TABLE articles(
             created_on TIMESTAMP DEFAULT now(),
             edited_on TIMESTAMP DEFAULT now(),
             upvoted_by BIGINT ARRAY DEFAULT null,
-            tags_id BIGINT DEFAULT null,
             tags BIGINT ARRAY DEFAULT null,
             image bytea DEFAULT null,
             description TEXT DEFAULT null,
