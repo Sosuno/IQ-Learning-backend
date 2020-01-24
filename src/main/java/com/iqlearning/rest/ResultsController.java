@@ -178,7 +178,7 @@ public class ResultsController {
                 questionResultList.add(questionResult);
                 ids.add(q.getId());
             }
-            if(ids.size() > 10)  return new ResponseEntity<>(questionResultList, HttpStatus.OK);
+            if(ids.size() >= 7)  return new ResponseEntity<>(questionResultList, HttpStatus.OK);
         }
         return new ResponseEntity<>(questionResultList, HttpStatus.OK);
     }
