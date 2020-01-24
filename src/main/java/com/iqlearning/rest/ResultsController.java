@@ -161,14 +161,24 @@ public class ResultsController {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        List<TestResults> testResultsList = testResultsService.getRandomResultsByOwner(user.getId(), 10);
+        List<TestResults> testResultsList = testResultsService.getRandomResultsByOwner(user.getId(), 100);
         List<QuestionResult> questionResultList = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
         for(TestResults t : testResultsList) {
             Question q = questionService.get(t.getQuestionId());
-            QuestionResult questionResult = new QuestionResult();
-            questionResult.setText(q.getQuestion());
-            questionResult.setResult(t.getPoints());
-            questionResultList.add(questionResult);
+            if(!ids.contains(t.getQuestionId())) {
+                QuestionResult questionResult = new QuestionResult();
+                questionResult.setText(q.getQuestion());
+                List<TestResults> results = testResultsService.getAllQuestionResults(q.getId());
+                List<Double> points = new ArrayList<>();
+                for (TestResults r : results) {
+                    points.add(r.getPoints());
+                }
+                questionResult.setResult(points);
+                questionResultList.add(questionResult);
+                ids.add(q.getId());
+            }
+            if(ids.size() > 10)  return new ResponseEntity<>(questionResultList, HttpStatus.OK);
         }
         return new ResponseEntity<>(questionResultList, HttpStatus.OK);
     }

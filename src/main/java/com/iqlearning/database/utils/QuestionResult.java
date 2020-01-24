@@ -4,7 +4,7 @@ import java.util.List;
 
 public class QuestionResult {
     private String text;
-    private double result;
+    private List<Double> result;
 
     public String getText() {
         return text;
@@ -14,11 +14,11 @@ public class QuestionResult {
         this.text = text;
     }
 
-    public double getResult() {
+    public List<Double> getResult() {
         return result;
     }
 
-    public void setResult(double result) {
+    public void setResult(List<Double> result) {
         this.result = result;
     }
 }
