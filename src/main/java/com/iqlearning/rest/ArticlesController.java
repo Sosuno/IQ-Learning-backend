@@ -103,6 +103,7 @@ public class ArticlesController {
         if(articleForm.getTitle() != null) articles.setTitle(articleForm.getTitle());
         if(articleForm.getTags() != null) articles.setTags(articleForm.getTags());
         if(articleForm.getImage() != null) articles.setImage(articleForm.getImage());
+        if(articleForm.getDescription() != null) articles.setDescription(articleForm.getDescription());
         Articles saved = articlesService.saveArticle(articles);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
