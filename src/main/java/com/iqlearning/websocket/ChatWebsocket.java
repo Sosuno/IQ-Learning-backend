@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -21,6 +22,8 @@ public class ChatWebsocket {
 
     @Autowired
     private ChatService chatService;
+    @Autowired
+    private SimpMessagingTemplate webSocket;
 
     @CrossOrigin(origins=("http://localhost:3000"))
     @MessageMapping("/sendMessage/{conversationId}")
@@ -39,15 +42,18 @@ public class ChatWebsocket {
     }
     @CrossOrigin(origins=("http://localhost:3000"))
     @MessageMapping("/startConversation/{userId}")
-    @SendTo("topic/user/{userId}")
-    public ResponseEntity<?> startConversation(@DestinationVariable("userId") Long userId, MessageForm message) throws Exception {
+  //  @SendTo("topic/user/{userId}")
+    public void startConversation(@DestinationVariable("userId") Long userId, MessageForm message) throws Exception {
         Message m = new Message(message.getMessage(),message.getSender(), message.getRecipient());
         m.setMessage(message.getMessage());
         m.setRecipient(message.getRecipient());
         Message mes = chatService.sendMessage(m,null);
-        System.out.println(mes.toString());
+        //sendConvoId(mes.getRecipient(),mes);
 
-        return new ResponseEntity<Object>(mes, HttpStatus.OK);
+        webSocket.convertAndSend("topic/user/" + mes.getRecipient(),mes);
+        webSocket.convertAndSend("topic/user/" + mes.getRecipient(),mes);
 
+      //  return new ResponseEntity<Object>(mes, HttpStatus.OK);
     }
+
 }

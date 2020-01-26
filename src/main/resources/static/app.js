@@ -18,7 +18,7 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('topic/user/2', function (sendMessage) {
+        stompClient.subscribe('topic/user/1', function (sendMessage) {
             showGreeting(JSON.parse(sendMessage.body).content);
         });
     });
@@ -33,7 +33,7 @@ function disconnect() {
 }
 
 function sendMessage() {
-    stompClient.send("/chat/startConversation/2", {}, JSON.stringify({'message': $("#Message").val(), 'recipient': 1, 'sender': 2}));
+    stompClient.send("/chat/startConversation/1", {}, JSON.stringify({'message': $("#Message").val(), 'recipient': 1, 'sender': 2}));
 }
 
 function showGreeting(message) {

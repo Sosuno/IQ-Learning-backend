@@ -11,25 +11,15 @@ import java.util.List;
 public interface IArticlesService {
 
     List<FullArticle> getAll();
-
     List<FullArticle> getUserArticles(Long userId);
-
     List<ArticleComment> getArticleComments(Long articleId);
-
     Articles saveArticle(Articles a);
-
     Comment saveComment(Comment c);
-
     Articles upvoteArticle(Long artId, Long userId);
-
     Comment upvoteComment(Long artId, Long userId);
-
     Iterable<Tag> getTags();
-
     Articles editTags(Long tagId, Long artId);
-
     Articles getArticle(Long Id);
-
     Comment getComment(Long id);
 
 }

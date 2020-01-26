@@ -20,6 +20,7 @@
     </parent>
 
     <dependencies>
+
         <dependency>
             <groupId>com.vladmihalcea</groupId>
             <artifactId>hibernate-types-52</artifactId>
