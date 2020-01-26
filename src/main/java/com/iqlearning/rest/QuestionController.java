@@ -29,7 +29,7 @@ public class QuestionController {
     private QuestionService questionService;
 
 
-    @PutMapping("/question/add")
+    @PostMapping("/question/add")
     public ResponseEntity<?> addQuestion(@RequestHeader Map<String, String> headers, @RequestBody FilledQuestion filledQuestion) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
@@ -68,7 +68,7 @@ public class QuestionController {
         }
     }
 
-    @PostMapping("/question/update")
+    @PutMapping("/question/update")
     public ResponseEntity<?> updateQuestion(@RequestHeader Map<String, String> headers, @RequestBody FilledQuestion filledQuestion) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);

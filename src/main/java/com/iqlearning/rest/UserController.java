@@ -11,13 +11,7 @@ import com.iqlearning.rest.resource.RegisterForm;
 import com.iqlearning.rest.resource.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +25,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/user/token")
+    @PutMapping("/user/token")
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
 
         LoggedUser user = userService.login(loginForm.getUsername(), loginForm.getPassword());
@@ -75,7 +69,7 @@ public class UserController {
                 .body("Session expired");
     }
 
-    @PostMapping("/user/update")
+    @PutMapping("/user/update")
     public ResponseEntity<?> editUser(@RequestHeader Map<String, String> headers, @RequestBody UserForm userForm) {
         String token = headers.get("authorization").split(" ")[1];
         LoggedUser user = userService.loginWithSession(token);
@@ -95,7 +89,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user/password")
+    @PutMapping("/user/password")
     public ResponseEntity<?> editPassword(@RequestHeader Map<String, String> headers, @RequestBody PasswordForm passwordForm) {
         String token = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(token);
