@@ -4,6 +4,7 @@ package com.iqlearning.rest;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.UserService;
 import com.iqlearning.database.utils.LoggedUser;
+import com.iqlearning.database.utils.PasswordEncoderConfig;
 import com.iqlearning.rest.resource.LoginForm;
 import com.iqlearning.rest.resource.UserForm;
 import com.iqlearning.rest.resource.PasswordForm;
@@ -24,6 +25,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    private PasswordEncoderConfig hash = new PasswordEncoderConfig();;
 
     @PutMapping("/user/token")
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
@@ -94,8 +97,8 @@ public class UserController {
         String token = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(token);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        else if(!passwordForm.getCurrentPass().equals(user.getPassword())) {
-            return new ResponseEntity<>("Current password doesn't match" + user.getPassword(), HttpStatus.BAD_REQUEST);
+        else if(!hash.passwordEncoder().matches(passwordForm.getCurrentPass(), user.getPassword())) {
+            return new ResponseEntity<>("Current password doesn't match", HttpStatus.BAD_REQUEST);
         } else {
             user.setPassword(passwordForm.getNewPass());
             return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
