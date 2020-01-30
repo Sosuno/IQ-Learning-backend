@@ -37,7 +37,7 @@ public class TestController {
     @Autowired
     private TestService testService;
 
-    @PutMapping("/test/add")
+    @PostMapping("/test/add")
     public ResponseEntity<?> addTest(@RequestHeader Map<String, String> headers, @RequestBody TestForm testForm) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
@@ -78,7 +78,7 @@ public class TestController {
         }
     }
 
-    @PostMapping("/test/update")
+    @PutMapping("/test/update")
     public ResponseEntity<?> updateTest(@RequestHeader Map<String, String> headers, @RequestBody TestForm testForm) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);

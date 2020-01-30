@@ -32,7 +32,7 @@ public class ResultsController {
     @Autowired
     private ITestResults testResultsService;
 
-    @PutMapping("/results/add")
+    @PostMapping("/results/add")
     public ResponseEntity<?> addTestResult(@RequestHeader Map<String, String> headers, @RequestBody ResultForm resultForm) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
@@ -127,7 +127,7 @@ public class ResultsController {
         return new ResponseEntity<>( "Results deleted", HttpStatus.OK);
     }
 
-    @PostMapping("/results/update")
+    @PutMapping("/results/update")
     public ResponseEntity<?> editTestResult(@RequestHeader Map<String, String> headers, @RequestBody ResultForm resultForm) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);

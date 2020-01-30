@@ -4,6 +4,7 @@ package com.iqlearning.rest;
 import com.iqlearning.database.entities.User;
 import com.iqlearning.database.service.UserService;
 import com.iqlearning.database.utils.LoggedUser;
+import com.iqlearning.database.utils.PasswordEncoderConfig;
 import com.iqlearning.rest.resource.LoginForm;
 import com.iqlearning.rest.resource.UserForm;
 import com.iqlearning.rest.resource.PasswordForm;
@@ -11,13 +12,7 @@ import com.iqlearning.rest.resource.RegisterForm;
 import com.iqlearning.rest.resource.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +26,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/user/token")
+    private PasswordEncoderConfig hash = new PasswordEncoderConfig();;
+
+    @PutMapping("/user/token")
     public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
 
         LoggedUser user = userService.login(loginForm.getUsername(), loginForm.getPassword());
@@ -75,7 +72,7 @@ public class UserController {
                 .body("Session expired");
     }
 
-    @PostMapping("/user/update")
+    @PutMapping("/user/update")
     public ResponseEntity<?> editUser(@RequestHeader Map<String, String> headers, @RequestBody UserForm userForm) {
         String token = headers.get("authorization").split(" ")[1];
         LoggedUser user = userService.loginWithSession(token);
@@ -95,13 +92,13 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user/password")
+    @PutMapping("/user/password")
     public ResponseEntity<?> editPassword(@RequestHeader Map<String, String> headers, @RequestBody PasswordForm passwordForm) {
         String token = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(token);
         if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
-        else if(!passwordForm.getCurrentPass().equals(user.getPassword())) {
-            return new ResponseEntity<>("Current password doesn't match" + user.getPassword(), HttpStatus.BAD_REQUEST);
+        else if(!hash.passwordEncoder().matches(passwordForm.getCurrentPass(), user.getPassword())) {
+            return new ResponseEntity<>("Current password doesn't match", HttpStatus.BAD_REQUEST);
         } else {
             user.setPassword(passwordForm.getNewPass());
             return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
