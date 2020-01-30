@@ -8,6 +8,7 @@ public class ArticleForm {
     private Long[] tags;
     private byte[] image;
     private String title;
+    private String description;
 
     public ArticleForm() {
     }
@@ -58,5 +59,13 @@ public class ArticleForm {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -4,7 +4,9 @@ import com.iqlearning.database.entities.Question;
 import com.iqlearning.database.entities.Test;
 import com.iqlearning.database.entities.TestResults;
 import com.iqlearning.database.entities.User;
+import com.iqlearning.database.service.TestService;
 import com.iqlearning.database.service.interfaces.*;
+import com.iqlearning.database.utils.QuestionResult;
 import com.iqlearning.rest.resource.ResultForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +32,7 @@ public class ResultsController {
     @Autowired
     private ITestResults testResultsService;
 
-    @PutMapping("/results/add")
+    @PostMapping("/results/add")
     public ResponseEntity<?> addTestResult(@RequestHeader Map<String, String> headers, @RequestBody ResultForm resultForm) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
@@ -43,10 +46,10 @@ public class ResultsController {
             if(testService.getTest(resultForm.getTestId()).getSubject() != questionService.get(r.getQuestionId()).getSubject()) {
                 return new ResponseEntity<>("Test and question subjects don't match", HttpStatus.BAD_REQUEST);
             }
-            if(!testResultsService.getQuestionResults(r.getQuestionId(), user.getId()).isEmpty())  {
-                return  new ResponseEntity<>("Results for question " + r.getQuestionId() + " already exist", HttpStatus.BAD_REQUEST);
+            if(r.getStudentId() == null)  {
+                r.setStudentId(0L);
             }
-            TestResults testResults = new TestResults(resultForm.getTestId(),r.getQuestionId(), r.getPoints(),user.getId());
+            TestResults testResults = new TestResults(resultForm.getTestId(),r.getQuestionId(), r.getPoints(), user.getId(), r.getStudentId(), new Timestamp(System.currentTimeMillis()));
             testResultsList.add(testResults);
         }
         for(TestResults t : testResultsList) {
@@ -124,7 +127,7 @@ public class ResultsController {
         return new ResponseEntity<>( "Results deleted", HttpStatus.OK);
     }
 
-    @PostMapping("/results/update")
+    @PutMapping("/results/update")
     public ResponseEntity<?> editTestResult(@RequestHeader Map<String, String> headers, @RequestBody ResultForm resultForm) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
@@ -153,5 +156,31 @@ public class ResultsController {
         return new ResponseEntity<>(savedTestResultsList, HttpStatus.OK);
     }
 
+    @GetMapping("/results/get/last")
+    public ResponseEntity<?> getLastUserResults(@RequestHeader Map<String, String> headers){
+        String session = headers.get("authorization").split(" ")[1];
+        User user = userService.getUserBySession(session);
+        if(user.getId() == -1) return new ResponseEntity<>("No active session", HttpStatus.UNAUTHORIZED);
+        List<TestResults> testResultsList = testResultsService.getRandomResultsByOwner(user.getId(), 100);
+        List<QuestionResult> questionResultList = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
+        for(TestResults t : testResultsList) {
+            Question q = questionService.get(t.getQuestionId());
+            if(!ids.contains(t.getQuestionId())) {
+                QuestionResult questionResult = new QuestionResult();
+                questionResult.setText(q.getQuestion());
+                List<TestResults> results = testResultsService.getAllQuestionResults(q.getId());
+                List<Double> points = new ArrayList<>();
+                for (TestResults r : results) {
+                    points.add(r.getPoints());
+                }
+                questionResult.setResult(points);
+                questionResultList.add(questionResult);
+                ids.add(q.getId());
+            }
+            if(ids.size() >= 7)  return new ResponseEntity<>(questionResultList, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(questionResultList, HttpStatus.OK);
+    }
 
 }

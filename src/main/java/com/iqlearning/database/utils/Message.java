@@ -11,6 +11,8 @@ public class Message {
     private Long recipient;
     private Timestamp sent;
     private boolean read;
+    private Long conversationId;
+    private String recipientUsername;
 
     public Message(String message) {
         this.message = message;
@@ -32,11 +34,19 @@ public class Message {
         this.id = c.getId();
         this.message = c.getMessage();
         this.sender = c.getSender();
-        if (c.getUser1().equals(c.getSender()))recipient = c.getUser2();
-        else recipient = c.getUser1();
         this.read = c.isRead();
         this.sent = c.getSentOn();
-
+        this.conversationId = c.getConversation();
+    }
+    public Message(Chat c, Long recipient, String recipientUsername) {
+        this.id = c.getId();
+        this.message = c.getMessage();
+        this.sender = c.getSender();
+        this.read = c.isRead();
+        this.sent = c.getSentOn();
+        this.recipient = recipient;
+        this.conversationId = c.getConversation();
+        this.recipientUsername = recipientUsername;
     }
 
     public String getMessage() {
@@ -85,5 +95,36 @@ public class Message {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(Long conversationId) {
+        this.conversationId = conversationId;
+    }
+
+    public String getRecipientUsername() {
+        return recipientUsername;
+    }
+
+    public void setRecipientUsername(String recipientUsername) {
+        this.recipientUsername = recipientUsername;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("id=").append(id);
+        sb.append(", message='").append(message).append('\'');
+        sb.append(", sender='").append(sender).append('\'');
+        sb.append(", recipient='").append(recipient).append('\'');
+        sb.append(", sent='").append(sent).append('\'');
+        sb.append(", read='").append(read).append('\'');
+        sb.append(", conversationId='").append(conversationId).append('\'');
+        sb.append(", recipientUsername='").append(recipientUsername).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

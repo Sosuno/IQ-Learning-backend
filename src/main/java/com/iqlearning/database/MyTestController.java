@@ -3,6 +3,7 @@ package com.iqlearning.database;
 
 import com.iqlearning.database.entities.*;
 import com.iqlearning.database.service.ArticlesService;
+import com.iqlearning.database.service.TestService;
 import com.iqlearning.database.service.interfaces.*;
 import com.iqlearning.database.utils.FullArticle;
 import com.iqlearning.database.utils.Message;
@@ -33,6 +34,9 @@ public class MyTestController {
     private IQuestionService questionService;
 
     @Autowired
+    private TestService testService;
+
+    @Autowired
     private IChatService chat;
 
     @Autowired
@@ -41,6 +45,16 @@ public class MyTestController {
     private User u1;
     private Session s;
 
+
+    @RequestMapping(value = "/test/test/getAll", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseBody
+    public List<?> getAllArticles() {
+        return testService.getAllTestResults(1L,10);
+    }
+
+
+
+/*
     @RequestMapping(value = "/test/articles/add", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
     public List<?> addArticle() {
@@ -334,4 +348,5 @@ public Comment addComment() {
 
         return list;
     }
+    */
 }

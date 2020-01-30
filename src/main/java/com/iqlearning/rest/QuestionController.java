@@ -1,24 +1,19 @@
 package com.iqlearning.rest;
 
-import com.iqlearning.context.activities.QuestionsManagement;
-import com.iqlearning.context.utils.FilledQuestion;
-
 import com.iqlearning.database.entities.Answer;
 import com.iqlearning.database.entities.Question;
 import com.iqlearning.database.entities.Subject;
 import com.iqlearning.database.entities.User;
-import com.iqlearning.database.service.interfaces.IAnswerService;
-import com.iqlearning.database.service.interfaces.ISessionService;
-import com.iqlearning.database.service.interfaces.ISubjectService;
-import com.iqlearning.database.service.interfaces.IUserService;
-import com.iqlearning.database.service.interfaces.IQuestionService;
+import com.iqlearning.database.service.QuestionService;
+import com.iqlearning.database.service.SubjectService;
+import com.iqlearning.database.service.UserService;
+import com.iqlearning.database.utils.FilledQuestion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 
@@ -27,25 +22,14 @@ import java.util.Map;
 public class QuestionController {
 
     @Autowired
-    private IUserService userService;
+    private UserService userService;
     @Autowired
-    private ISessionService sessionService;
-
+    private SubjectService subjectService;
     @Autowired
-    private IAnswerService answerService;
-    @Autowired
-    private ISubjectService subjectService;
-    @Autowired
-    private IQuestionService questionService;
+    private QuestionService questionService;
 
-    private QuestionsManagement que;
 
-    @PostConstruct
-    private void init() {
-        que = new QuestionsManagement(questionService, answerService, subjectService);
-    }
-
-    @PutMapping("/question/add")
+    @PostMapping("/question/add")
     public ResponseEntity<?> addQuestion(@RequestHeader Map<String, String> headers, @RequestBody FilledQuestion filledQuestion) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
@@ -63,7 +47,7 @@ public class QuestionController {
         }
         if(!filledQuestion.isChoiceTest()) hasAtLeastOneCorrectAnswer = true;
         if(!hasAtLeastOneCorrectAnswer) return new ResponseEntity<>("At least one answer must be correct", HttpStatus.BAD_REQUEST);
-        Question addedQuestion = que.addQuestion(filledQuestion);
+        Question addedQuestion = questionService.addQuestion(filledQuestion);
         if(addedQuestion == null) {
             return new ResponseEntity<>("Added question is null", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>(addedQuestion, HttpStatus.OK);
@@ -78,18 +62,13 @@ public class QuestionController {
         if(questionToDelete == null) {
             return new ResponseEntity<>("Question not found", HttpStatus.BAD_REQUEST);
         } else {
-            FilledQuestion question = que.getReadyQuestion(questionToDelete);
-            if(question.isChoiceTest()) {
-                for (Answer a : question.getAnswers()) {
-                    answerService.deleteAnswer(a.getId());
-                }
-            }
+            FilledQuestion question = questionService.getReadyQuestion(questionToDelete);
             questionService.deleteQuestion(id);
             return new ResponseEntity<>( "Question deleted", HttpStatus.OK);
         }
     }
 
-    @PostMapping("/question/update")
+    @PutMapping("/question/update")
     public ResponseEntity<?> updateQuestion(@RequestHeader Map<String, String> headers, @RequestBody FilledQuestion filledQuestion) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
@@ -115,7 +94,7 @@ public class QuestionController {
             return new ResponseEntity<>("Owner id does not match logged user id", HttpStatus.BAD_REQUEST);
         } else if(filledQuestion.getOwner() == null) filledQuestion.setOwner(user.getId());
         if(filledQuestion.getCreated() == null) filledQuestion.setCreated(questionToUpdate.getCreated());
-        FilledQuestion updatedQuestion = que.getReadyQuestion(que.addQuestion(filledQuestion));
+        FilledQuestion updatedQuestion = questionService.getReadyQuestion(questionService.addQuestion(filledQuestion));
         if(updatedQuestion == null) {
             return new ResponseEntity<>("Update unsuccessful", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>(updatedQuestion, HttpStatus.OK);
@@ -125,11 +104,11 @@ public class QuestionController {
     public ResponseEntity<?> getQuestionsByUser(@RequestHeader Map<String, String> headers){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Question> questionList = questionService.getAllUserQuestions(user.getId());
-        List<FilledQuestion> filledQuestionList = que.getReadyQuestions(questionList);
+        List<FilledQuestion> filledQuestionList = questionService.getReadyQuestions(questionList);
         return new ResponseEntity<>(filledQuestionList , HttpStatus.OK);
     }
 
@@ -137,11 +116,11 @@ public class QuestionController {
     public ResponseEntity<?> getQuestionsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Question> questionList = questionService.getAllQuestionForSubjectOfUser(user.getId(),id);
-        List<FilledQuestion> readyQuestionList = que.getReadyQuestions(questionList);
+        List<FilledQuestion> readyQuestionList = questionService.getReadyQuestions(questionList);
         return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
     }
 
@@ -149,7 +128,7 @@ public class QuestionController {
     public ResponseEntity<?> getQuestionById(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
 
@@ -158,14 +137,14 @@ public class QuestionController {
         if(user.getId() != question.getId() && !question.isShareable()) {
             return new ResponseEntity<>("Question not shareable", HttpStatus.NOT_ACCEPTABLE);
         }
-        FilledQuestion filledQuestion = que.getReadyQuestion(question);
+        FilledQuestion filledQuestion = questionService.getReadyQuestion(question);
         return new ResponseEntity<>(filledQuestion , HttpStatus.OK);
     }
 
     @GetMapping("/subject/get/{id}")
     public ResponseEntity<?> getSubjectById(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         Subject subject = subjectService.getSubject(id);
@@ -176,7 +155,7 @@ public class QuestionController {
     @GetMapping("/subject/get")
     public ResponseEntity<?> getAllSubjects(@RequestHeader Map<String, String> headers){
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Subject> subjectList = subjectService.getAllSubjects();
@@ -186,7 +165,7 @@ public class QuestionController {
     @GetMapping("/answers/get/{id}")
     public ResponseEntity<?> getAnswersByQuestionId(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
-        if (sessionService.getSession(session) == null) {
+        if (userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         User user = userService.getUserBySession(session);
@@ -194,58 +173,57 @@ public class QuestionController {
         if(question == null) return new ResponseEntity<>("Question not found", HttpStatus.BAD_REQUEST);
         if(!question.isChoice_test()) return new ResponseEntity<>("Open questions have no answers", HttpStatus.BAD_REQUEST);
         if(user.getId() != question.getOwner() && !question.isShareable()) return new ResponseEntity<>("Question not shareable", HttpStatus.BAD_REQUEST);
-        List<Answer> answerList = answerService.getAnswers(question);
+        List<Answer> answerList = questionService.getAnswers(question);
         return new ResponseEntity<>(answerList, HttpStatus.OK);
     }
 
     @GetMapping("/questions/get/public")
     public ResponseEntity<?> getPublicQuestions(@RequestHeader Map<String, String> headers) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Question> questionList = questionService.getAllSharedQuestions();
-        List<FilledQuestion> readyQuestionList = que.getReadyQuestions(questionList);
+        List<FilledQuestion> readyQuestionList = questionService.getReadyQuestions(questionList);
         return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
     }
 
     @GetMapping("/questions/get/public/user")
     public ResponseEntity<?> getPublicQuestionsByUser(@RequestHeader Map<String, String> headers) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         User user = userService.getUserBySession(session);
         List<Question> questionList = questionService.getAllSharedQuestionsByUser(user.getId());
-        List<FilledQuestion> readyQuestionList = que.getReadyQuestions(questionList);
+        List<FilledQuestion> readyQuestionList = questionService.getReadyQuestions(questionList);
         return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
     }
 
     @GetMapping("/questions/get/public/subject/{id}")
     public ResponseEntity<?> getPublicQuestionsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         Subject subject = subjectService.getSubject(id);
         if(subject.getId() == null) return new ResponseEntity<>("Invalid subject", HttpStatus.BAD_REQUEST);
         List<Question> questionList = questionService.getAllSharedQuestionsForSubject(id);
-        List<FilledQuestion> readyQuestionList = que.getReadyQuestions(questionList);
+        List<FilledQuestion> readyQuestionList = questionService.getReadyQuestions(questionList);
         return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
     }
 
     @GetMapping("/questions/get/public/user/subject/{id}")
     public ResponseEntity<?> getPublicQuestionsByUserAndSubject(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         User user = userService.getUserBySession(session);
         Subject subject = subjectService.getSubject(id);
         if(subject.getId() == null) return new ResponseEntity<>("Invalid subject", HttpStatus.BAD_REQUEST);
         List<Question> questionList = questionService.getAllShareableOfUserBySubject(user.getId(),id);
-        List<FilledQuestion> readyQuestionList = que.getReadyQuestions(questionList);
+        List<FilledQuestion> readyQuestionList = questionService.getReadyQuestions(questionList);
         return new ResponseEntity<>(readyQuestionList, HttpStatus.OK);
     }
-
 }

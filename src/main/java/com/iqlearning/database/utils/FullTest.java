@@ -1,4 +1,4 @@
-package com.iqlearning.context.utils;
+package com.iqlearning.database.utils;
 
 import com.iqlearning.database.entities.Test;
 
@@ -14,6 +14,7 @@ public class FullTest {
     private boolean shareable;
     private Timestamp created;
     private Timestamp lastEdited;
+    private String title;
     private int downloads;
 
 
@@ -86,5 +87,18 @@ public class FullTest {
         this.created = t.getCreated();
         this.lastEdited = t.getLastEdited();
         this.downloads = t.getDownloads();
+        this.title = t.getTitle();
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

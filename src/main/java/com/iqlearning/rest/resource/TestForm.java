@@ -6,6 +6,7 @@ public class TestForm {
     private Boolean shareable;
     private Long subjectId;
     private Long[] questions;
+    private String title;
 
     public Long getId() {
         return id;
@@ -37,5 +38,13 @@ public class TestForm {
 
     public void setQuestions(Long[] questions) {
         this.questions = questions;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

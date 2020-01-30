@@ -68,24 +68,23 @@ INSERT INTO article_tags(tag) VALUES
   ('New Ideas');
 
 
-INSERT INTO articles(owner,title,contents,tags) VALUES
-  (1,'Zabji mnie','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', null),
-  (2,'I hate u','Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.',null),
-  (1,'bla bla bla','Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?','{1,2}');
-
+INSERT INTO articles(owner,title,contents,tags,description) VALUES
+  (1,'Awesome title','TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdCwgc2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdWEuIFV0IGVuaW0gYWQgbWluaW0gdmVuaWFtLCBxdWlzIG5vc3RydWQgZXhlcmNpdGF0aW9uIHVsbGFtY28gbGFib3JpcyBuaXNpIHV0IGFsaXF1aXAgZXggZWEgY29tbW9kbyBjb25zZXF1YXQuIER1aXMgYXV0ZSBpcnVyZSBkb2xvciBpbiByZXByZWhlbmRlcml0IGluIHZvbHVwdGF0ZSB2ZWxpdCBlc3NlIGNpbGx1bSBkb2xvcmUgZXUgZnVnaWF0IG51bGxhIHBhcmlhdHVyLiBFeGNlcHRldXIgc2ludCBvY2NhZWNhdCBjdXBpZGF0YXQgbm9uIHByb2lkZW50LCBzdW50IGluIGN1bHBhIHF1aSBvZmZpY2lhIGRlc2VydW50IG1vbGxpdCBhbmltIGlkIGVzdCBsYWJvcnVtLg==', null,'some description'),
+  (2,'Awesome title1','TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdCwgc2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdWEuIFV0IGVuaW0gYWQgbWluaW0gdmVuaWFtLCBxdWlzIG5vc3RydWQgZXhlcmNpdGF0aW9uIHVsbGFtY28gbGFib3JpcyBuaXNpIHV0IGFsaXF1aXAgZXggZWEgY29tbW9kbyBjb25zZXF1YXQuIER1aXMgYXV0ZSBpcnVyZSBkb2xvciBpbiByZXByZWhlbmRlcml0IGluIHZvbHVwdGF0ZSB2ZWxpdCBlc3NlIGNpbGx1bSBkb2xvcmUgZXUgZnVnaWF0IG51bGxhIHBhcmlhdHVyLiBFeGNlcHRldXIgc2ludCBvY2NhZWNhdCBjdXBpZGF0YXQgbm9uIHByb2lkZW50LCBzdW50IGluIGN1bHBhIHF1aSBvZmZpY2lhIGRlc2VydW50IG1vbGxpdCBhbmltIGlkIGVzdCBsYWJvcnVtLg==','{1,2}','some description'),
+  (1,'Awesome title 2','TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdCwgc2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdWEuIFV0IGVuaW0gYWQgbWluaW0gdmVuaWFtLCBxdWlzIG5vc3RydWQgZXhlcmNpdGF0aW9uIHVsbGFtY28gbGFib3JpcyBuaXNpIHV0IGFsaXF1aXAgZXggZWEgY29tbW9kbyBjb25zZXF1YXQuIER1aXMgYXV0ZSBpcnVyZSBkb2xvciBpbiByZXByZWhlbmRlcml0IGluIHZvbHVwdGF0ZSB2ZWxpdCBlc3NlIGNpbGx1bSBkb2xvcmUgZXUgZnVnaWF0IG51bGxhIHBhcmlhdHVyLiBFeGNlcHRldXIgc2ludCBvY2NhZWNhdCBjdXBpZGF0YXQgbm9uIHByb2lkZW50LCBzdW50IGluIGN1bHBhIHF1aSBvZmZpY2lhIGRlc2VydW50IG1vbGxpdCBhbmltIGlkIGVzdCBsYWJvcnVtLg==','{1,2}','some description');
 
 
 INSERT INTO articles_comments(article_id,commentator,comment) VALUES
-  (1,1,'Co za chujnia'),
-  (1,2,'dupa'),
-  (1,1,'damn'),
-  (1,2,'oj'),
-  (1,1,'bubu'),
-  (1,3,'bubu?'),
-  (1,1,'bubu.'),
-  (2,1,'good stuff'),
-  (2,1,'yup'),
-  (2,1,'nie wiem'),
+  (1,1,'It is a comment '),
+  (1,2,'It is a comment 1'),
+  (1,1,'It is a comment 2'),
+  (1,2,'It is a comment 3'),
+  (1,1,'It is a comment 4'),
+  (1,3,'It is a comment 5'),
+  (1,1,'It is a comment 6'),
+  (2,1,'It is a comment 7'),
+  (2,1,'It is a comment'),
+  (2,1,'It is a comment 8'),
   (2,1,'out'),
   (2,1,'aaaaaa'),
   (2,1,'bbbbb'),
@@ -101,13 +100,44 @@ INSERT INTO articles_comments(article_id,commentator,comment) VALUES
 INSERT INTO tests(owner,subject,questions,shareable) VALUES
     (6,2,'{5,6,7,8,9,10,11}',true);
 
-INSERT INTO chat(user1,user2,sender,message) VALUES
-  (2,1,1,'ups5'),
-  (1,3,1,'ups7') ,
-  (1,4,4,'ups6') ,
-  (1,2,1,'ups5') ,
-  (4,1,1,'ups4') ,
-  (1,2,2,'ups3') ,
-  (2,1,2,'ups2') ,
-  (2,1,1,'ups1')
+INSERT INTO conversations(user1,user2) VALUES
+  (1,2),
+  (2,3);
+
+INSERT INTO chat(conversation,sender,message) VALUES
+  (1,1,'ups5'),
+  (1,1,'ups7') ,
+  (1,2,'ups6') ,
+  (1,2,'ups5') ,
+  (2,3,'ups4') ,
+  (1,2,'ups3') ,
+  (2,2,'ups2') ,
+  (2,3,'ups1');
+
+INSERT INTO tests_results(test_id,question_id,points,results_owner) VALUES
+  (1,5,1,1),
+  (1,6,1,1),
+  (1,7,1,1),
+  (1,8,1,1),
+  (1,9,1,1),
+  (1,5,1,1),
+  (1,6,1,1),
+  (1,7,1,1),
+  (1,8,1,1),
+  (1,9,1,1),
+  (1,5,1,1),
+  (1,6,1,1),
+  (1,7,1,1),
+  (1,8,1,1),
+  (1,9,1,1),
+  (1,5,1,1),
+  (1,6,1,1),
+  (1,7,1,1),
+  (1,8,1,1),
+  (1,9,1,1),
+  (1,5,1,1),
+  (1,6,1,1),
+  (1,7,1,1),
+  (1,8,1,1),
+  (1,9,1,1);
 

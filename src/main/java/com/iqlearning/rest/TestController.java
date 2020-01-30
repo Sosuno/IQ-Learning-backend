@@ -1,14 +1,11 @@
 package com.iqlearning.rest;
 
-import com.iqlearning.context.activities.QuestionsManagement;
-import com.iqlearning.context.utils.FilledQuestion;
-import com.iqlearning.context.utils.FullTest;
+
 import com.iqlearning.database.entities.*;
-import com.iqlearning.database.service.interfaces.*;
+import com.iqlearning.database.service.*;
+import com.iqlearning.database.utils.FilledQuestion;
+import com.iqlearning.database.utils.FullTest;
 import com.iqlearning.rest.resource.TestForm;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.text.WordUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -32,21 +29,15 @@ import java.util.*;
 public class TestController {
 
     @Autowired
-    private IUserService userService;
+    private UserService userService;
     @Autowired
-    private ISessionService sessionService;
+    private SubjectService subjectService;
     @Autowired
-    private ISubjectService subjectService;
+    private QuestionService questionService;
     @Autowired
-    private IAnswerService answerService;
-    @Autowired
-    private IQuestionService questionService;
-    @Autowired
-    private ITestService testService;
+    private TestService testService;
 
-    private QuestionsManagement que;
-
-    @PutMapping("/test/add")
+    @PostMapping("/test/add")
     public ResponseEntity<?> addTest(@RequestHeader Map<String, String> headers, @RequestBody TestForm testForm) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
@@ -62,7 +53,7 @@ public class TestController {
                 return new ResponseEntity<>("Question " + id + " is not of the same subject as test", HttpStatus.BAD_REQUEST);
             }
         }
-        Test newTest = new Test(user.getId(), testForm.getSubjectId(), questionList, testForm.getShareable(), 0, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()));
+        Test newTest = new Test(user.getId(), testForm.getSubjectId(), questionList, testForm.getShareable(), 0, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), testForm.getTitle());
         Test addedTest = testService.saveTest(newTest);
         if(addedTest != null) {
             return new ResponseEntity<>(addedTest, HttpStatus.OK);
@@ -87,7 +78,7 @@ public class TestController {
         }
     }
 
-    @PostMapping("/test/update")
+    @PutMapping("/test/update")
     public ResponseEntity<?> updateTest(@RequestHeader Map<String, String> headers, @RequestBody TestForm testForm) {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
@@ -123,7 +114,7 @@ public class TestController {
     public ResponseEntity<?> getTestsByUser(@RequestHeader Map<String, String> headers){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Test> testList = testService.getTestsByUser(user.getId());
@@ -138,7 +129,7 @@ public class TestController {
     public ResponseEntity<?> getTestsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         Subject subject = subjectService.getSubject(id);
@@ -155,13 +146,13 @@ public class TestController {
     public ResponseEntity<?> getTestById(@RequestHeader Map<String, String> headers, @PathVariable Long id){
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
 
         Test test = testService.getTest(id);
         if(test == null) return new ResponseEntity<>("Test not found", HttpStatus.BAD_REQUEST);
-        if(test.getOwner() != user.getId()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
+        if(test.getOwner() != user.getId()  && !test.isShareable()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
         FullTest fullTest = testFiller(test);
         return new ResponseEntity<>(fullTest, HttpStatus.OK);
     }
@@ -169,7 +160,7 @@ public class TestController {
     @GetMapping("/tests/get/public")
     public ResponseEntity<?> getPublicQuestions(@RequestHeader Map<String, String> headers) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         List<Test> testList = testService.getSharedTests();
@@ -183,7 +174,7 @@ public class TestController {
     @GetMapping("/tests/get/public/subject/{id}")
     public ResponseEntity<?> getPublicQuestionsBySubject(@RequestHeader Map<String, String> headers, @PathVariable Long id) {
         String session = headers.get("authorization").split(" ")[1];
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         Subject subject = subjectService.getSubject(id);
@@ -200,12 +191,12 @@ public class TestController {
     public ResponseEntity<?> getPrintableTestById(@RequestHeader Map<String, String> headers, @PathVariable Long id, @PathVariable Long groups) throws IOException {
         String session = headers.get("authorization").split(" ")[1];
         User user = userService.getUserBySession(session);
-        if(sessionService.getSession(session) == null) {
+        if(userService.getSession(session) == null) {
             return new ResponseEntity<>("Session expired", HttpStatus.UNAUTHORIZED);
         }
         Test test = testService.getTest(id);
         if(test == null) return new ResponseEntity<>("Test not found", HttpStatus.BAD_REQUEST);
-        if(test.getOwner() != user.getId()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
+        if(test.getOwner() != user.getId() && !test.isShareable()) return new ResponseEntity<>("You're not the owner", HttpStatus.UNAUTHORIZED);
         if(groups<1 || groups>4) return new ResponseEntity<>("You must specify a number of groups that is between 1 and 4", HttpStatus.BAD_REQUEST);
         FullTest fullTest = testFiller(test);
         List<FilledQuestion> filledQuestionList = fullTest.getQuestions();
@@ -282,7 +273,7 @@ public class TestController {
                 int answerCounter = 0;
                 if(!q.isChoiceTest()) offsetY -= 10;
                 if(q.isChoiceTest()) {
-                    List<Answer> answerList = answerService.getAnswers(q.getId());
+                    List<Answer> answerList = questionService.getAnswers(q.getId());
                     // changing order of answers for different groups
                     if(i != 1) answerList = answersShuffler(answerList,i);
 
@@ -332,7 +323,7 @@ public class TestController {
                     contentStream.showText(questionCounter+". ");
                     contentStream.endText();
                     questionCounter++;
-                    List<Answer> answerList = answerService.getAnswers(q.getId());
+                    List<Answer> answerList = questionService.getAnswers(q.getId());
                     // changing order of answers for different groups
                     if(i != 1) answerList = answersShuffler(answerList,i);
                     answerCounter = 0;
@@ -376,8 +367,7 @@ public class TestController {
             Question q = questionService.get(l);
             if(q != null) questionList.add(q);
         }
-        que = new QuestionsManagement(questionService, answerService, subjectService);
-        List<FilledQuestion> filledQuestionList = que.getReadyQuestions(questionList);
+        List<FilledQuestion> filledQuestionList = questionService.getReadyQuestions(questionList);
         FullTest fullTest = new FullTest(test, filledQuestionList);
         return fullTest;
     }
