@@ -4,7 +4,8 @@ INSERT INTO users(name, surname, username, password,email,status,creation_time,l
   ('Jane','Doe','jane','jane123','doe@gmail.com',0,now(),0),
   ('Garrus','Vakarian','Archangel','calibrate','vakarian@normandy.com',0,now(),0),
   ('Gosia','Z','FochMaiden','qweqwe123','gosia.xq@gmail.com',5,now(),0),
-  ('Stefan','P','stef','123','stefo@st.st',5,now(),0);
+  ('Stefan','P','stef','123','stefo@szkola.pl',5,now(),0),
+  ('Janusz','M','janusz','123','jano@school.uk',5,now(),0);
 
 INSERT INTO sessions VALUES
   ('1234-1234-1234-1234',1,now()),
@@ -13,21 +14,36 @@ INSERT INTO sessions VALUES
 INSERT INTO subjects(name,year) VALUES
   ('Math', 1),
   ('Math',2),
-  ('Math',7),
-  ('Biology',2);
+  ('History',4),
+  ('Biology',6);
 
 INSERT INTO questions(owner, subject,question,choice_test,shareable,created,last_edited) VALUES
   (1,1,'What is 1+1?',false,FALSE,now(),now()),
   (1,1,'What is 2+1?',false,TRUE ,now(),now()),
-  (1,1,'Does 1+1 equals:',TRUE,FALSE,now(),now()),
-  (1,1,'Does 1+3 equals:',TRUE ,TRUE ,now(),now()),
+  (1,1,'Does 1+1 equal:',TRUE,FALSE,now(),now()),
+  (1,1,'Does 1+3 equal:',TRUE ,TRUE ,now(),now()),
+
   (6,2,'Which one is executed first?',true ,TRUE ,now(),now()),
   (6,2,'Is 1/2 greater than 1/3?',true ,TRUE ,now(),now()),
   (6,2,'2+2*2 equals ', TRUE,true,now(),now()),
   (6,2,'What is the greatest common denominator for 140, 375 and 330?', TRUE,true,now(),now()),
   (6,2,'Which one is a prime number?', TRUE,true,now(),now()),
   (6,2,'Mark had 32 euros, Amy had 88 zlotys, Megan had 13 pounds and Sam had 55 dollars. If Mark, Amy and Megan were to buy dollars with their money and give them to Sam, he would have 184 dollars. 1 euro costs 1,1 dollars and one zloty costs 0,3 dollars. Calculate how many pounds you can buy with one dollar.', FALSE,true,now(),now()),
-  (6,2,'Ann had 14 apples, John had 27 oranges, Susan had 13 pears and Gary had X grapes. Combined price of all their fruits was 139$. If Ann were to sell 3 apples and Susan were to buy 2 pears, the combined price would not change. If Gary ate 3 grapes and John bought 7 more oranges, the price would rise by 7$. Calculate the price of each of the fruits and the number of grapes.', FALSE,true,now(),now());
+  (6,2,'Ann had 14 apples, John had 27 oranges, Susan had 13 pears and Gary had X grapes. Combined price of all their fruits was 139$. If Ann were to sell 3 apples and Susan were to buy 2 pears, the combined price would not change. If Gary ate 3 grapes and John bought 7 more oranges, the price would rise by 7$. Calculate the price of each of the fruits and the number of grapes.', FALSE,true,now(),now()),
+
+  (7,3,'Which country won the Hundred Years War?',TRUE,TRUE,now(),now()),
+  (7,3,'Century stands for how many years?',TRUE,TRUE,now(),now()),
+  (7,3,'When did US declare independence?',TRUE,TRUE,now(),now()),
+  (7,3,'Who was the US president during the Civil War?',TRUE,TRUE,now(),now()),
+  (7,3,'What stands for ancient Greek polis?',FALSE,TRUE,now(),now()),
+  (7,3,'What happened during the Boston Tea Party?',FALSE,TRUE,now(),now()),
+
+  (3,4,'Is human body made mainly of water?',TRUE,TRUE,now(),now()),
+  (3,4,'Tibia and fibula are bones of',TRUE,TRUE,now(),now()),
+  (3,4,'Snakes are:',TRUE,TRUE,now(),now()),
+  (3,4,'How much blood does human body typically contain?',TRUE,TRUE,now(),now()),
+  (3,4,'What is metabolism?',FALSE,TRUE,now(),now()),
+  (3,4,'Describe how are cells protected from viruses',FALSE,TRUE,now(),now());
 
 INSERT INTO answers(question_id,answer,correct,created,last_edited) VALUES
   (3,'3',FALSE,now(),now()),
@@ -60,7 +76,41 @@ INSERT INTO answers(question_id,answer,correct,created,last_edited) VALUES
   (9,'14',FALSE,now(),now()),
   (9,'15',FALSE,now(),now()),
   (9,'23',TRUE,now(),now()),
-  (9,'27',FALSE,now(),now());
+  (9,'27',FALSE,now(),now()),
+
+  (12,'France',TRUE,now(),now()),
+  (12,'England',FALSE,now(),now()),
+
+  (13,'10',FALSE,now(),now()),
+  (13,'100',TRUE,now(),now()),
+  (13,'12',FALSE,now(),now()),
+  (13,'1000',FALSE,now(),now()),
+
+  (14,'June 5, 1767',FALSE,now(),now()),
+  (14,'January 8, 1767',FALSE,now(),now()),
+  (14,'June 15, 1776',FALSE,now(),now()),
+  (14,'July 8, 1776',TRUE,now(),now()),
+
+  (15,'Donald Trump',FALSE,now(),now()),
+  (15,'John F. Kennedy',FALSE,now(),now()),
+  (15,'Abraham Lincoln',TRUE,now(),now()),
+  (15,'Benjamin Franklin',FALSE,now(),now()),
+
+  (18,'Yes',TRUE,now(),now()),
+  (18,'No',FALSE,now(),now()),
+
+  (19,'Arm',FALSE,now(),now()),
+  (19,'Spine',FALSE,now(),now()),
+  (19,'Leg',TRUE,now(),now()),
+  (19,'Head',FALSE,now(),now()),
+
+  (20,'Viviparous',FALSE,now(),now()),
+  (20,'Oviparous',True,now(),now()),
+
+  (21,'3-4 litres',FALSE,now(),now()),
+  (21,'5-6 litres',FALSE,now(),now()),
+  (21,'5.5-6.5 litres',FALSE,now(),now()),
+  (21,'4.5-5.5 litres',TRUE,now(),now());
 
 INSERT INTO article_tags(tag) VALUES
   ('Educationl'),
@@ -86,7 +136,9 @@ INSERT INTO articles_comments(article_id,commentator,comment) VALUES
   (3,6,'We should earn more');
 
 INSERT INTO tests(owner,subject,questions,shareable) VALUES
-    (6,2,'{5,6,7,8,9,10,11}',true);
+    (6,2,'{5,6,7,8,9,10,11}',true),
+    (7,3,'{12,13,14,15,16,17}',true),
+    (3,4,'{18,19,20,21,22,23}',true);
 
 INSERT INTO conversations(user1,user2) VALUES
   (2,6),
