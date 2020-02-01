@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,7 @@ public class ArticlesController {
     @GetMapping("/article/get/comments/{id}")
     public ResponseEntity<?> getArticleComments(@PathVariable Long id) {
         List<ArticleComment> commentList = articlesService.getArticleComments(id);
+        Collections.reverse(commentList);
         return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
 
