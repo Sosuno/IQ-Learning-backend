@@ -130,7 +130,7 @@ INSERT INTO articles_comments(article_id,commentator,comment) VALUES
   (2,2,'Yeah this is true'),
   (2,6,'Really?'),
   (2,5,'Poor children will be forced to run and it will break their knees'),
-  (2,4,'PE is schools is not on a good level...'),
+  (2,4,'PE in schools is not on a good level...'),
   (3,5,'Everyone earns too much!'),
   (3,2,'I work two shifts and this way I can support my family'),
   (3,6,'We should earn more');
